@@ -1,0 +1,23 @@
+<% add_decidim_page_title(proposal_wizard_step_title(action_name)) %>
+
+<div class="row">
+  <div class="columns large-12">
+    <%= render partial: "wizard_header" %>
+
+    <div class="card">
+      <div class="card__content">
+        <%= decidim_form_for(@form, form_params) do |form| %>
+          <%= render partial: "edit_form_fields", locals: { form: form } %>
+
+          <div class="row column flex-center">
+            <%= yield if block_given? %>
+            <%= form.submit form_params[:submit_text], class: "button large mt-s mb-none", data: { disable: true } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="columns large-3"></div>
+</div>
+
+<%= javascript_include_tag "decidim/proposals/add_proposal" %>
