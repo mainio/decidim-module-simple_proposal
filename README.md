@@ -20,14 +20,15 @@ $ bundle
 ```
 
 ## Configuration
-```
-  initializer "decidim.simple_proposal.require_category" do
-    require_scope: true # Default
-  end
 
-  initializer "decidim.simple_proposal.require_scope" do
-    require_scope: true # Default
-  end
+
+# config/initializers/simple_proposal.rb
+
+```
+Decidim::SimpleProposal.configure do |config|
+  config.require_category: true # Default
+  config.require_scope: true # Default
+end
 ```
 
 ## Contributing

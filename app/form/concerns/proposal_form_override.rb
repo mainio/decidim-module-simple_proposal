@@ -11,7 +11,27 @@ module ProposalFormOverride
       callback.raw_filter.attributes.delete :scope if callback.raw_filter.respond_to? :attributes
     end
 
-    validates :category, presence: Decidim::SimpleProposal.require_category
-    validates :scope, presence: Decidim::SimpleProposal.require_scope
+    validates :category, presence: true, if: ->(form) { form.require_category? }
+    validates :scope, presence: true, if: ->(form) { form.require_scope? }
+    validate :check_category
+    validate :check_scope
+
+    def require_category?
+      Decidim::SimpleProposal.require_category
+    end
+
+    def require_scope?
+      Decidim::SimpleProposal.require_scope
+    end
+
+    private
+
+    def check_category
+      errors.add(:category, :blank) if category_id.blank? && require_category?
+    end
+
+    def check_scope
+      errors.add(:scope, :blank) if scope_id.blank? && require_scope?
+    end
   end
 end

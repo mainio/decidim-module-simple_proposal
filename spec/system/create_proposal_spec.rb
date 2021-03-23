@@ -22,15 +22,26 @@ describe "User creates proposal simply", type: :system do
 
   before do
     login_as user, scope: :user
+    visit_component
   end
 
-  context "when creating a new proposal" do
+  context "when category and scope are required" do
     before do
-      login_as user, scope: :user
-      visit_component
+      allow(Decidim::SimpleProposal).to receive(:require_category).and_return(true)
+      allow(Decidim::SimpleProposal).to receive(:require_scope).and_return(true)
     end
 
-    it "creates new proposal" do
+    it "doesnt create a new proposal without category and scope" do
+      click_link "New proposal"
+      fill_in :proposal_title, with: proposal_title
+      fill_in :proposal_body, with: proposal_body
+      select category.name["en"], from: :proposal_category
+      click_button "Continue"
+      expect(page).to have_css(".form-error")
+      expect(page).to have_content("can't be blank")
+    end
+
+    it "creates a new proposal with a category and scope" do
       click_link "New proposal"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
@@ -38,20 +49,46 @@ describe "User creates proposal simply", type: :system do
       click_link "Global scope"
       click_link scope.name["en"]
       click_link "Select"
-
       click_button "Continue"
-      expect(page).to have_content("Publish", wait: 5)
+      click_button "Publish"
       expect(page).to have_content("Proposal successfully published.")
+      expect(Decidim::Proposals::Proposal.last.category).to eq(category)
+      expect(Decidim::Proposals::Proposal.last.scope).to eq(scope)
     end
 
-    # context "and draft proposal exists for current users" do
-    #   let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
+    context "when draft proposal exists for current users" do
+      let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
 
-    #   it "redirects to edit draft" do
-    #     click_link "New proposal"
-    #     path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
-    #     expect(page).to have_current_path(path)
-    #   end
-    # end
+      it "can finish proposal" do
+        click_link "New proposal"
+        path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
+        expect(page).to have_current_path(path)
+
+        select category.name["en"], from: :proposal_category
+        click_link "Global scope"
+        click_link scope.name["en"]
+        click_link "Select"
+        click_button "Preview"
+        click_button "Publish"
+        expect(page).to have_content("Proposal successfully published.")
+      end
+    end
+  end
+
+  context "when category and scope arent required" do
+    before do
+      allow(Decidim::SimpleProposal).to receive(:require_category).and_return(false)
+      allow(Decidim::SimpleProposal).to receive(:require_scope).and_return(false)
+    end
+
+    it "creates a new proposal without category and scope" do
+      click_link "New proposal"
+      fill_in :proposal_title, with: proposal_title
+      fill_in :proposal_body, with: proposal_body
+      select category.name["en"], from: :proposal_category
+      click_button "Continue"
+      click_button "Publish"
+      expect(page).to have_content("Proposal successfully published.")
+    end
   end
 end

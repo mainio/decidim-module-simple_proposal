@@ -19,8 +19,7 @@ module ProposalsControllerOverride
     def create
       enforce_permission_to :create, :proposal
       @step = :step_1
-      params["proposal"]["category_id"] = params["proposal"].delete :category
-      params["proposal"]["scope_id"] = params["proposal"].delete :scope
+      fix_params
       @form = form(Decidim::Proposals::ProposalForm).from_params(params)
 
       @proposal = Decidim::Proposals::Proposal.new(@form.attributes.except(
@@ -47,7 +46,7 @@ module ProposalsControllerOverride
       Decidim::Proposals::UpdateProposal.call(@form, current_user, @proposal) do
         on(:ok) do |proposal|
           flash[:notice] = I18n.t("proposals.update_draft.success", scope: "decidim")
-          redirect_to Decidim::ResourceLocatorPresenter.new(proposal).path + "/preview"
+          redirect_to "#{Decidim::ResourceLocatorPresenter.new(proposal).path}/preview"
         end
 
         on(:invalid) do
@@ -60,8 +59,8 @@ module ProposalsControllerOverride
     # Overridden because of a core bug when the command posts the "invalid"
     # signal and when rendering the form.
     def update_draft
-      @step = :step_1
       enforce_permission_to :edit, :proposal, proposal: @proposal
+      @step = :step_1
 
       @form = form_proposal_params
       Decidim::Proposals::UpdateProposal.call(@form, current_user, @proposal) do
@@ -99,6 +98,17 @@ module ProposalsControllerOverride
     end
 
     private
+
+    # Changed param in edit_form_fields view, because view didnt show asterisks without
+    def fix_params
+      params["proposal"]["category_id"] = params["proposal"].delete :category
+      params["proposal"]["scope_id"] = params["proposal"].delete :scope
+    end
+
+    def form_proposal_params
+      fix_params
+      form(Decidim::Proposals::ProposalForm).from_params(params)
+    end
 
     def default_filter_params
       {
