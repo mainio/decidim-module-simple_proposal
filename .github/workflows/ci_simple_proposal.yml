@@ -1,4 +1,4 @@
-name: "[CI] Simple Proposal"
+name: "[CI] Simple proposal"
 on: [push, pull_request]
 
 env:
