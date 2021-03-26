@@ -44,13 +44,13 @@
 
 <% if @form.categories&.any? %>
   <div class="field">
-    <%= form.categories_select :category, @form.categories, include_blank: t("decidim.proposals.proposals.edit.select_a_category") %>
+    <%= form.categories_select :category_id, @form.categories, include_blank: t("decidim.proposals.proposals.edit.select_a_category") %>
   </div>
 <% end %>
 
 <% if current_component.has_subscopes? %>
   <div class="field">
-    <%= scopes_picker_field form, :scope, root: current_component.scope %>
+    <%= scopes_picker_field form, :scope_id, root: current_component.scope %>
   </div>
 <% end %>
 

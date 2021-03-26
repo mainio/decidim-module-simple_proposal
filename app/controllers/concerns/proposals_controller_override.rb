@@ -19,7 +19,6 @@ module ProposalsControllerOverride
     def create
       enforce_permission_to :create, :proposal
       @step = :step_1
-      fix_params
       @form = form(Decidim::Proposals::ProposalForm).from_params(params)
 
       @proposal = Decidim::Proposals::Proposal.new(@form.attributes.except(
@@ -99,14 +98,7 @@ module ProposalsControllerOverride
 
     private
 
-    # Changed param in edit_form_fields view, because view didnt show asterisks without
-    def fix_params
-      params["proposal"]["category_id"] = params["proposal"].delete :category
-      params["proposal"]["scope_id"] = params["proposal"].delete :scope
-    end
-
     def form_proposal_params
-      fix_params
       form(Decidim::Proposals::ProposalForm).from_params(params)
     end
 

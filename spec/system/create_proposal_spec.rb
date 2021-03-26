@@ -35,7 +35,7 @@ describe "User creates proposal simply", type: :system do
       click_link "New proposal"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
-      select category.name["en"], from: :proposal_category
+      select category.name["en"], from: :proposal_category_id
       click_button "Continue"
       expect(page).to have_css(".form-error")
       expect(page).to have_content("can't be blank")
@@ -45,7 +45,7 @@ describe "User creates proposal simply", type: :system do
       click_link "New proposal"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
-      select category.name["en"], from: :proposal_category
+      select category.name["en"], from: :proposal_category_id
       click_link "Global scope"
       click_link scope.name["en"]
       click_link "Select"
@@ -56,6 +56,23 @@ describe "User creates proposal simply", type: :system do
       expect(Decidim::Proposals::Proposal.last.scope).to eq(scope)
     end
 
+    it "can be edited after creating a draft" do
+      click_link "New proposal"
+      fill_in :proposal_title, with: proposal_title
+      fill_in :proposal_body, with: proposal_body
+      select category.name["en"], from: :proposal_category_id
+      click_link "Global scope"
+      click_link scope.name["en"]
+      click_link "Select"
+      click_button "Continue"
+      click_link "Modify the proposal"
+      fill_in :proposal_title, with: "This proposal is modified"
+      click_button "Preview"
+      expect(page).to have_content("This proposal is modified")
+      click_button "Publish"
+      expect(page).to have_content("Proposal successfully published.")
+    end
+
     context "when draft proposal exists for current users" do
       let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
 
@@ -64,7 +81,7 @@ describe "User creates proposal simply", type: :system do
         path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
         expect(page).to have_current_path(path)
 
-        select category.name["en"], from: :proposal_category
+        select category.name["en"], from: :proposal_category_id
         click_link "Global scope"
         click_link scope.name["en"]
         click_link "Select"
@@ -85,7 +102,7 @@ describe "User creates proposal simply", type: :system do
       click_link "New proposal"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
-      select category.name["en"], from: :proposal_category
+      select category.name["en"], from: :proposal_category_id
       click_button "Continue"
       click_button "Publish"
       expect(page).to have_content("Proposal successfully published.")

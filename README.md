@@ -3,6 +3,8 @@
 [![Build Status](https://github.com/mainio/decidim-module-simple_proposal/actions/workflows/ci_simple_proposal.yml/badge.svg)](https://github.com/mainio/decidim-module-simple_proposal/actions)
 [![codecov](https://codecov.io/gh/mainio/decidim-module-simple_proposal/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-simple_proposal)
 
+** THIS MODULE OVERRIDES CORE FUNCTIONALITY OF DECIDIM-PROPOSALS AND CAN CAUSE UNEXPECTED SIDE EFFECTS! DO NOT USE IF YOU DONT KNOW FOR SURE WHAT YOU ARE DOING! **
+
 A [Decidim](https://github.com/decidim/decidim) module that provides a simplified proposal creation.
 
 ## Installation

@@ -11,8 +11,8 @@ module ProposalFormOverride
       callback.raw_filter.attributes.delete :scope if callback.raw_filter.respond_to? :attributes
     end
 
-    validates :category, presence: true, if: ->(form) { form.require_category? }
-    validates :scope, presence: true, if: ->(form) { form.require_scope? }
+    validates :category_id, presence: true, if: ->(form) { form.require_category? }
+    validates :scope_id, presence: true, if: ->(form) { form.require_scope? }
     validate :check_category
     validate :check_scope
 
