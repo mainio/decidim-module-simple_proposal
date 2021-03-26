@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     decidim-simple_proposal (0.23.0)
-      decidim-admin (~> 0.23.0.dev)
       decidim-core (~> 0.23.0.dev)
+      decidim-proposals (~> 0.23.0.dev)
 
 GEM
   remote: https://rubygems.org/
@@ -790,4 +790,4 @@ DEPENDENCIES
   web-console (~> 3.5)
 
 BUNDLED WITH
-   2.1.4
+   2.2.3
