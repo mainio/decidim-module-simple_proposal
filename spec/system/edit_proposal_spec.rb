@@ -43,17 +43,10 @@ describe "User creates proposal simply", type: :system do
 
     context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
       it "can add image" do
-        attach_file(
-          :proposal_add_photos,
-          assetti("testpicture.jpg")
-        )
+        attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
         click_button "Save"
         expect(page).to have_content("Proposal successfully updated")
       end
-    end
-
-    def assetti(name)
-      File.expand_path(File.join(__dir__, "..", "..", "spec", "fixtures", "files", name))
     end
   end
 end
