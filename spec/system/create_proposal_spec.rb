@@ -112,5 +112,4 @@ describe "User creates proposal simply", type: :system do
       expect(page).to have_content("Proposal successfully published.")
     end
   end
-
 end
