@@ -4,3 +4,16 @@ en:
       proposals:
         form_view:
           cancel: Cancel
+        edit:
+          send: Save
+        edit_draft:
+          send: Preview
+        new:
+          send: Preview
+        show:
+          back_to_list: Back to all proposals
+      collaborative_drafts:
+        update:
+          error: There was a problem saving the proposal.
+      update_draft:
+        error: There was a problem saving the proposal.

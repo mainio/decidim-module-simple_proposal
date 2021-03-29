@@ -4,3 +4,16 @@ fi:
       proposals:
         form_view:
           cancel: Peruuta
+        edit:
+          send: Tallenna
+        edit_draft:
+          send: Esikatsele
+        new:
+          send: Esikatsele
+        show:
+          back_to_list: Takaisin kaikkiin ehdotuksiin
+      collaborative_drafts:
+        update:
+          error: Ehdotuksen tallennus epäonnistui.
+      update_draft:
+        error: Ehdotuksen tallennus epäonnistui.

@@ -4,3 +4,16 @@ sv:
       proposals:
         form_view:
           cancel: Avbryt
+        edit:
+          send: Spara
+        edit_draft:
+          send: Förhandsvisning
+        new:
+          send: Förhandsvisning
+        show:
+          back_to_list: Tillbaka till alla förslag
+      collaborative_drafts:
+        update:
+          error: Det gick inte att spara förslaget.
+      update_draft:
+        error: Det gick inte att spara förslaget.
