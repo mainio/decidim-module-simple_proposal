@@ -41,13 +41,15 @@ describe "User creates proposal simply", type: :system do
       expect(page).to have_content("Proposal successfully updated")
     end
 
-    it "can add image" do
-      attach_file(
-        :proposal_add_photos,
-        assetti("testpicture.jpg")
-      )
-      click_button "Save"
-      expect(page).to have_content("Proposal successfully updated")
+    context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
+      it "can add image" do
+        attach_file(
+          :proposal_add_photos,
+          assetti("testpicture.jpg")
+        )
+        click_button "Save"
+        expect(page).to have_content("Proposal successfully updated")
+      end
     end
 
     def assetti(name)
