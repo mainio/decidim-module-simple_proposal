@@ -106,7 +106,6 @@ describe "User creates proposal simply", type: :system do
       click_link "New proposal"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
-      select category.name["en"], from: :proposal_category_id
       click_button "Preview"
       click_button "Publish"
       expect(page).to have_content("Proposal successfully published.")
