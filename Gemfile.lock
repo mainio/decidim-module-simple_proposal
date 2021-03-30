@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     decidim-simple_proposal (0.23.0)
-      decidim-core (~> 0.23.0.dev)
-      decidim-proposals (~> 0.23.0.dev)
+      decidim-core (~> 0.23.0)
+      decidim-proposals (~> 0.23.0)
 
 GEM
   remote: https://rubygems.org/
@@ -775,8 +775,8 @@ DEPENDENCIES
   bootsnap (~> 1.4)
   byebug (~> 11.0)
   codecov
-  decidim (~> 0.23.0.dev)
-  decidim-dev (~> 0.23.0.dev)
+  decidim (~> 0.23.0)
+  decidim-dev (~> 0.23.0)
   decidim-simple_proposal!
   faker (~> 1.9)
   letter_opener_web (~> 1.3)
