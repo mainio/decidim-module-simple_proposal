@@ -16,8 +16,8 @@ describe "User creates proposal simply", type: :system do
            participatory_space: participatory_process)
   end
 
-  let(:proposal_title) { "This proposal has now new title" }
-  let(:proposal_body) { "This proposal has now new body" }
+  let(:proposal_title) { ::Faker::Lorem.paragraph }
+  let(:proposal_body) { ::Faker::Lorem.paragraph }
 
   before do
     allow(Decidim::SimpleProposal).to receive(:require_category).and_return(false)
@@ -39,6 +39,8 @@ describe "User creates proposal simply", type: :system do
     it "can be edited" do
       click_button "Save"
       expect(page).to have_content("Proposal successfully updated")
+      expect(Decidim::Proposals::Proposal.last.title["en"]).to eq(proposal_title)
+      expect(Decidim::Proposals::Proposal.last.body["en"]).to eq(proposal_body)
     end
 
     context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do

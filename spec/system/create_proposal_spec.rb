@@ -18,8 +18,8 @@ describe "User creates proposal simply", type: :system do
   let!(:scope) { create :scope, organization: organization }
   let!(:category) { create :category, participatory_space: participatory_process }
 
-  let(:proposal_title) { "More sidewalks and less roads" }
-  let(:proposal_body) { "Cities need more people, not more cars" }
+  let(:proposal_title) { ::Faker::Lorem.paragraph }
+  let(:proposal_body) { ::Faker::Lorem.paragraph }
 
   before do
     login_as user, scope: :user
@@ -74,6 +74,19 @@ describe "User creates proposal simply", type: :system do
         expect(page).to have_content("This proposal is modified")
         click_button "Publish"
         expect(page).to have_content("Proposal successfully published.")
+      end
+
+      context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
+        it "can add image" do
+          click_link "New proposal"
+          fill_in :proposal_title, with: proposal_title
+          fill_in :proposal_body, with: proposal_body
+          fill_category_and_scope
+          attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
+          click_button "Preview"
+          click_button "Publish"
+          expect(page).to have_content("Proposal successfully published.")
+        end
       end
     end
 
