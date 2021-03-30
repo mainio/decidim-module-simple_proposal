@@ -26,13 +26,6 @@ describe "User creates proposal simply", type: :system do
     visit_component
   end
 
-  def fill_category_and_scope
-    select category.name["en"], from: :proposal_category_id
-    click_link "Global scope"
-    click_link scope.name["en"]
-    click_link "Select"
-  end
-
   context "when category and scope are required" do
     before do
       allow(Decidim::SimpleProposal).to receive(:require_category).and_return(true)
@@ -93,18 +86,25 @@ describe "User creates proposal simply", type: :system do
     context "when draft proposal exists for current users" do
       let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
 
-      it "can finish proposal" do
+      before do
         click_link "New proposal"
         path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
         expect(page).to have_current_path(path)
+        fill_category_and_scope
+      end
 
-        select category.name["en"], from: :proposal_category_id
-        click_link "Global scope"
-        click_link scope.name["en"]
-        click_link "Select"
+      it "can finish proposal" do
         click_button "Preview"
         click_button "Publish"
         expect(page).to have_content("Proposal successfully published.")
+      end
+
+      context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
+        it "shows error message when image is malicious" do
+          attach_file(:proposal_add_photos, Decidim::Dev.asset("malicious.jpg"))
+          click_button "Preview"
+          expect(page).to have_content("There was a problem saving the proposal")
+        end
       end
     end
   end
@@ -123,5 +123,12 @@ describe "User creates proposal simply", type: :system do
       click_button "Publish"
       expect(page).to have_content("Proposal successfully published.")
     end
+  end
+
+  def fill_category_and_scope
+    select category.name["en"], from: :proposal_category_id
+    click_link "Global scope"
+    click_link scope.name["en"]
+    click_link "Select"
   end
 end
