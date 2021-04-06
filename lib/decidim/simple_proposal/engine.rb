@@ -8,7 +8,6 @@ module Decidim
       config.to_prepare do
         Decidim::Proposals::ProposalsController.include ProposalsControllerOverride
         Decidim::Proposals::ProposalForm.include ProposalFormOverride
-        Decidim::Proposals::ProposalMCell.include ProposalMCellOverride
       end
     end
   end
