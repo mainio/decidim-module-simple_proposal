@@ -7,7 +7,8 @@ source "https://rubygems.org"
 base_path = File.basename(__dir__) == "development_app" ? "../" : ""
 require_relative "#{base_path}lib/decidim/simple_proposal/version"
 
-DECIDIM_VERSION = Decidim::SimpleProposal::DECIDIM_VERSION
+# DECIDIM_VERSION = Decidim::SimpleProposal::DECIDIM_VERSION
+DECIDIM_VERSION = { github: "decidim/decidim", branch: "develop" }.freeze
 
 gem "decidim", DECIDIM_VERSION
 gem "decidim-simple_proposal", path: "."
