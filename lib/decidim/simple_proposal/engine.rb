@@ -6,8 +6,8 @@ module Decidim
       isolate_namespace Decidim::SimpleProposal
 
       config.to_prepare do
-        Decidim::Proposals::ProposalsController.include ProposalsControllerOverride
-        Decidim::Proposals::ProposalForm.include ProposalFormOverride
+        Decidim::Proposals::ProposalsController.include Decidim::SimpleProposal::ProposalsControllerOverride
+        Decidim::Proposals::ProposalForm.include Decidim::SimpleProposal::ProposalFormOverride
       end
     end
   end
