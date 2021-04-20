@@ -19,11 +19,11 @@ module Decidim
         validate :check_scope
 
         def require_category?
-          Decidim::SimpleProposal.require_category
+          Decidim::SimpleProposal.require_category && Decidim::Scope.count.positive?
         end
 
         def require_scope?
-          Decidim::SimpleProposal.require_scope
+          Decidim::SimpleProposal.require_scope && categories.count.positive?
         end
 
         private
