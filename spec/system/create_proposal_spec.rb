@@ -55,27 +55,27 @@ describe "User creates proposal simply", type: :system do
         expect(Decidim::Proposals::Proposal.last.scope).to eq(scope)
       end
 
-      it "can be edited after creating a draft" do
-        click_link "New proposal"
-        fill_in :proposal_title, with: proposal_title
-        fill_in :proposal_body, with: proposal_body
-        fill_category_and_scope
-        click_button "Preview"
-        click_link "Modify the proposal"
-        fill_in :proposal_title, with: "This proposal is modified"
-        click_button "Preview"
-        expect(page).to have_content("This proposal is modified")
-        click_button "Publish"
-        expect(page).to have_content("Proposal successfully published.")
-      end
+    context "when there is a scope and category" do
+      let!(:scope) { create :scope, organization: organization }
+      let!(:category) { create :category, participatory_space: participatory_process }
+
+      describe "proposal creation process" do
+        it "doesnt create a new proposal without category and scope" do
+          click_link "New proposal"
+          fill_in :proposal_title, with: proposal_title
+          fill_in :proposal_body, with: proposal_body
+          select category.name["en"], from: :proposal_category_id
+          click_button "Preview"
+          expect(page).to have_css(".form-error")
+          expect(page).to have_content("There's an error in this field")
+        end
 
       context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
         it "can add image" do
           click_link "New proposal"
           fill_in :proposal_title, with: proposal_title
           fill_in :proposal_body, with: proposal_body
-          fill_category_and_scope
-          attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
+          fill_category_and_scope(category, scope)
           click_button "Preview"
           click_button "Publish"
           expect(page).to have_content("Proposal successfully published.")
@@ -83,21 +83,45 @@ describe "User creates proposal simply", type: :system do
       end
     end
 
-    context "when draft proposal exists for current users" do
-      let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
+        it "can be edited after creating a draft" do
+          click_link "New proposal"
+          fill_in :proposal_title, with: proposal_title
+          fill_in :proposal_body, with: proposal_body
+          fill_category_and_scope(category, scope)
+          click_button "Preview"
+          click_link "Modify the proposal"
+          fill_in :proposal_title, with: "This proposal is modified"
+          click_button "Preview"
+          expect(page).to have_content("This proposal is modified")
+          click_button "Publish"
+          expect(page).to have_content("Proposal successfully published.")
+        end
 
-      before do
-        click_link "New proposal"
-        path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
-        expect(page).to have_current_path(path)
-        fill_category_and_scope
+        context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
+          it "can add image" do
+            click_link "New proposal"
+            fill_in :proposal_title, with: proposal_title
+            fill_in :proposal_body, with: proposal_body
+            fill_category_and_scope(category, scope)
+            attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
+            click_button "Preview"
+            click_button "Publish"
+            expect(page).to have_content("Proposal successfully published.")
+          end
+        end
       end
 
-      it "can finish proposal" do
-        click_button "Preview"
-        click_button "Publish"
-        expect(page).to have_content("Proposal successfully published.")
-      end
+      context "when draft proposal exists for current users" do
+        let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
+
+        before do
+          click_link "New proposal"
+          path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
+          expect(page).to have_current_path(path)
+          fill_category_and_scope(category, scope)
+          # Because chrome tries to click outside of viewport
+          scroll_to find(".button--nomargin.large")
+        end
 
       context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
         it "shows error message when image is malicious" do
@@ -125,10 +149,8 @@ describe "User creates proposal simply", type: :system do
     end
   end
 
-  def fill_category_and_scope
+  def fill_category_and_scope(category, scope)
     select category.name["en"], from: :proposal_category_id
-    click_link "Global scope"
-    click_link scope.name["en"]
-    click_link "Select"
+    select scope.name["en"], from: :proposal_scope_id
   end
 end
