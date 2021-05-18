@@ -65,14 +65,14 @@ describe "User creates proposal simply", type: :system do
           select category.name["en"], from: :proposal_category_id
           click_button "Preview"
           expect(page).to have_css(".form-error")
-          expect(page).to have_content("can't be blank")
+          expect(page).to have_content("There's an error in this field")
         end
 
         it "creates a new proposal with a category and scope" do
           click_link "New proposal"
           fill_in :proposal_title, with: proposal_title
           fill_in :proposal_body, with: proposal_body
-          fill_category_and_scope
+          fill_category_and_scope(category, scope)
           click_button "Preview"
           click_button "Publish"
           expect(page).to have_content("Proposal successfully published.")
@@ -84,7 +84,7 @@ describe "User creates proposal simply", type: :system do
           click_link "New proposal"
           fill_in :proposal_title, with: proposal_title
           fill_in :proposal_body, with: proposal_body
-          fill_category_and_scope
+          fill_category_and_scope(category, scope)
           click_button "Preview"
           click_link "Modify the proposal"
           fill_in :proposal_title, with: "This proposal is modified"
@@ -99,7 +99,7 @@ describe "User creates proposal simply", type: :system do
             click_link "New proposal"
             fill_in :proposal_title, with: proposal_title
             fill_in :proposal_body, with: proposal_body
-            fill_category_and_scope
+            fill_category_and_scope(category, scope)
             attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
             click_button "Preview"
             click_button "Publish"
@@ -115,7 +115,9 @@ describe "User creates proposal simply", type: :system do
           click_link "New proposal"
           path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
           expect(page).to have_current_path(path)
-          fill_category_and_scope
+          fill_category_and_scope(category, scope)
+          # Because chrome tries to click outside of viewport
+          scroll_to find(".button--nomargin.large")
         end
 
         it "can finish proposal" do
@@ -151,10 +153,8 @@ describe "User creates proposal simply", type: :system do
     end
   end
 
-  def fill_category_and_scope
+  def fill_category_and_scope(category, scope)
     select category.name["en"], from: :proposal_category_id
-    click_link "Global scope"
-    click_link scope.name["en"]
-    click_link "Select"
+    select scope.name["en"], from: :proposal_scope_id
   end
 end
