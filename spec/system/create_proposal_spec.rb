@@ -40,7 +40,12 @@ describe "User creates proposal simply", type: :system do
       allow(Decidim::SimpleProposal).to receive(:require_scope).and_return(true)
     end
 
-    describe "proposal creation process without scope and category" do
+    context "without any scopes or categories" do
+      before do
+        expect(Decidim::Scope.count).to eq(0)
+        expect(Decidim::Category.count).to eq(0)
+      end
+
       it "creates a new proposal without a category and scope" do
         click_link "New proposal"
         fill_in :proposal_title, with: proposal_title
@@ -57,54 +62,52 @@ describe "User creates proposal simply", type: :system do
       let!(:scope) { create :scope, organization: organization }
       let!(:category) { create :category, participatory_space: participatory_process }
 
-      describe "proposal creation process" do
-        it "doesnt create a new proposal without category and scope" do
-          click_link "New proposal"
-          fill_in :proposal_title, with: proposal_title
-          fill_in :proposal_body, with: proposal_body
-          select category.name["en"], from: :proposal_category_id
-          click_button "Preview"
-          expect(page).to have_css(".form-error")
-          expect(page).to have_content("There's an error in this field")
-        end
+      it "doesnt create a new proposal without category and scope" do
+        click_link "New proposal"
+        fill_in :proposal_title, with: proposal_title
+        fill_in :proposal_body, with: proposal_body
+        select category.name["en"], from: :proposal_category_id
+        click_button "Preview"
+        expect(page).to have_css(".form-error")
+        expect(page).to have_content("There's an error in this field")
+      end
 
-        it "creates a new proposal with a category and scope" do
+      it "creates a new proposal with a category and scope" do
+        click_link "New proposal"
+        fill_in :proposal_title, with: proposal_title
+        fill_in :proposal_body, with: proposal_body
+        fill_category_and_scope(category, scope)
+        click_button "Preview"
+        click_button "Publish"
+        expect(page).to have_content("Proposal successfully published.")
+        expect(Decidim::Proposals::Proposal.last.category).to eq(category)
+        expect(Decidim::Proposals::Proposal.last.scope).to eq(scope)
+      end
+
+      it "can be edited after creating a draft" do
+        click_link "New proposal"
+        fill_in :proposal_title, with: proposal_title
+        fill_in :proposal_body, with: proposal_body
+        fill_category_and_scope(category, scope)
+        click_button "Preview"
+        click_link "Modify the proposal"
+        fill_in :proposal_title, with: "This proposal is modified"
+        click_button "Preview"
+        expect(page).to have_content("This proposal is modified")
+        click_button "Publish"
+        expect(page).to have_content("Proposal successfully published.")
+      end
+
+      context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
+        it "can add image" do
           click_link "New proposal"
           fill_in :proposal_title, with: proposal_title
           fill_in :proposal_body, with: proposal_body
           fill_category_and_scope(category, scope)
+          attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
           click_button "Preview"
           click_button "Publish"
           expect(page).to have_content("Proposal successfully published.")
-          expect(Decidim::Proposals::Proposal.last.category).to eq(category)
-          expect(Decidim::Proposals::Proposal.last.scope).to eq(scope)
-        end
-
-        it "can be edited after creating a draft" do
-          click_link "New proposal"
-          fill_in :proposal_title, with: proposal_title
-          fill_in :proposal_body, with: proposal_body
-          fill_category_and_scope(category, scope)
-          click_button "Preview"
-          click_link "Modify the proposal"
-          fill_in :proposal_title, with: "This proposal is modified"
-          click_button "Preview"
-          expect(page).to have_content("This proposal is modified")
-          click_button "Publish"
-          expect(page).to have_content("Proposal successfully published.")
-        end
-
-        context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
-          it "can add image" do
-            click_link "New proposal"
-            fill_in :proposal_title, with: proposal_title
-            fill_in :proposal_body, with: proposal_body
-            fill_category_and_scope(category, scope)
-            attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
-            click_button "Preview"
-            click_button "Publish"
-            expect(page).to have_content("Proposal successfully published.")
-          end
         end
       end
 
