@@ -24,7 +24,7 @@ module Decidim
         end
 
         def ancestors
-          @ancestors ||= Decidim::Scope.where(parent_id: nil)
+          Decidim::Scope.where(parent_id: nil)
         end
 
         def children_after_parent(ancestor, array, prefix)
