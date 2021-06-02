@@ -6,12 +6,17 @@ module Decidim
       extend ActiveSupport::Concern
       included do
         def scopes_picker_field(form, name, root: false, options: { checkboxes_on_top: true })
-          options.merge!(selected: form.scope_id) if form.try(:scope_id)
-          options.merge!(selected: form.settings.scope_id) if form.try(:settings).try(:scope_id)
+          options.merge!(selected: selected_scope(form)) if selected_scope(form)
           form.select(name, simple_scope_options(root: root, options: options), include_blank: t("decidim.scopes.prompt"))
         end
 
         private
+
+        def selected_scope(form)
+          form.try(:scope_id) ||
+            form.try(:settings).try(:scope_id) ||
+            form.try(:object).try(:scope_id)
+        end
 
         def simple_scope_options(root: false, options: {})
           scopes_arrray = []
