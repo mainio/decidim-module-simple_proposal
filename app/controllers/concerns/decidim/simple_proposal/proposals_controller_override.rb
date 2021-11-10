@@ -45,7 +45,7 @@ module Decidim
           )
           @proposal.add_coauthor(current_user, user_group: user_group)
 
-          # We update these when creating proposal, but We want to call update because after that proposal becomes persisted
+          # We could set these when creating proposal, but We want to call update because after that proposal becomes persisted
           # and it adds coauthor correctly.
           @proposal.update(title: { I18n.locale => @form.attributes[:title] })
           @proposal.update(body: { I18n.locale => @form.attributes[:body] })
