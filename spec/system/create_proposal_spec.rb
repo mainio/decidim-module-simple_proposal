@@ -58,9 +58,14 @@ describe "User creates proposal simply", type: :system do
       end
     end
 
-    context "when there is a scope and category" do
-      let!(:scope) { create :scope, organization: organization }
-      let!(:category) { create :category, participatory_space: participatory_process }
+    context "when scopes are enabled and there is subscope and category" do
+      before do
+        component.update(settings: { scopes_enabled: true, scope_id: parent_scope.id, attachments_allowed: true })
+      end
+
+      let(:parent_scope) { create(:scope, organization: organization) }
+      let!(:scope) { create(:subscope, parent: parent_scope) }
+      let!(:category) { create(:category, participatory_space: participatory_process) }
 
       it "doesnt create a new proposal without category and scope" do
         click_link "New proposal"

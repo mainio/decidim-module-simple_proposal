@@ -18,12 +18,20 @@ module Decidim
         validate :check_category
         validate :check_scope
 
+        def categories_enabled?
+          categories&.any?
+        end
+
+        def scopes_enabled?
+          current_component.scopes_enabled? && current_component.has_subscopes?
+        end
+
         def require_category?
-          Decidim::SimpleProposal.require_category && categories.count.positive?
+          Decidim::SimpleProposal.require_category && categories_enabled?
         end
 
         def require_scope?
-          Decidim::SimpleProposal.require_scope && Decidim::Scope.count.positive?
+          Decidim::SimpleProposal.require_scope && scopes_enabled?
         end
 
         private
