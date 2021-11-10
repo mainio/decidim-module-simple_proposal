@@ -14,6 +14,7 @@ module Decidim
             @step = :step_1
             @proposal ||= Decidim::Proposals::Proposal.new(component: current_component)
             @form = form_proposal_model
+            @form.body = translated_proposal_body_template
             @form.attachment = form_attachment_new
           end
         end
@@ -21,7 +22,7 @@ module Decidim
         def create
           enforce_permission_to :create, :proposal
           @step = :step_1
-          @form = form(Decidim::Proposals::ProposalForm).from_params(params)
+          @form = form(Decidim::Proposals::ProposalForm).from_params(proposal_creation_params)
 
           @proposal = Decidim::Proposals::Proposal.new(@form.attributes.except(
             :user_group_id,
@@ -43,6 +44,11 @@ module Decidim
             id: params[:proposal][:user_group_id]
           )
           @proposal.add_coauthor(current_user, user_group: user_group)
+
+          # We could set these when creating proposal, but We want to call update because after that proposal becomes persisted
+          # and it adds coauthor correctly.
+          @proposal.update(title: { I18n.locale => @form.attributes[:title] })
+          @proposal.update(body: { I18n.locale => @form.attributes[:body] })
 
           Decidim::Proposals::UpdateProposal.call(@form, current_user, @proposal) do
             on(:ok) do |proposal|
@@ -139,6 +145,7 @@ module Decidim
           end
         end
 
+        # TODO: Remove after feature/configurable_order_for_proposals is merged!
         def default_order
           "recent"
         end
