@@ -4,10 +4,12 @@ fi:
       close_meeting:
         proposal_ids: Ideaa luotu tapaamisessa
       collaborative_draft:
+        body: Idean kuvaus
         has_address: Idealla on sijainti
       project:
         proposal_ids: Liittyvät ideat
       proposal:
+        body: Idean kuvaus
         has_address: Idealla on sijainti
         user_group_id: Luo idea käyttäjänä
       result:
@@ -204,6 +206,9 @@ fi:
         participatory_texts:
           publish:
             success: Kaikki ideat on julkaistu
+        proposals:
+          show:
+            body: Idean kuvaus
         proposal_answers:
           form:
             accepted: Etenee äänestykseen

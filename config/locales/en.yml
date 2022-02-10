@@ -4,10 +4,12 @@ en:
       close_meeting:
         proposal_ids: Ideas created in the meeting
       collaborative_draft:
+        body: Body
         has_address: Has address
       project:
         proposal_ids: Related ideas
       proposal:
+        body: Body
         has_address: Has address
         user_group_id: Create idea as
       result:
@@ -204,6 +206,9 @@ en:
         participatory_texts:
           publish:
             success: All ideas have been published
+        proposals:
+          show:
+            body: Idean kuvaus
         proposal_answers:
           form:
             accepted: Proceeds to voting
