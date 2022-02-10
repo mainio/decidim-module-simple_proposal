@@ -47,12 +47,12 @@ describe "User creates proposal simply", type: :system do
       end
 
       it "creates a new proposal without a category and scope" do
-        click_link "New proposal"
+        click_link "New idea"
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         click_button "Preview"
         click_button "Publish"
-        expect(page).to have_content("Proposal successfully published.")
+        expect(page).to have_content("Idea successfully published.")
         expect(Decidim::Proposals::Proposal.last.title["en"]).to eq(proposal_title)
         expect(Decidim::Proposals::Proposal.last.body["en"]).to eq(proposal_body)
       end
@@ -68,7 +68,7 @@ describe "User creates proposal simply", type: :system do
       let!(:category) { create(:category, participatory_space: participatory_process) }
 
       it "doesnt create a new proposal without category and scope" do
-        click_link "New proposal"
+        click_link "New idea"
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         select category.name["en"], from: :proposal_category_id
@@ -78,41 +78,41 @@ describe "User creates proposal simply", type: :system do
       end
 
       it "creates a new proposal with a category and scope" do
-        click_link "New proposal"
+        click_link "New idea"
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         fill_category_and_scope(category, scope)
         click_button "Preview"
         click_button "Publish"
-        expect(page).to have_content("Proposal successfully published.")
+        expect(page).to have_content("Idea successfully published.")
         expect(Decidim::Proposals::Proposal.last.category).to eq(category)
         expect(Decidim::Proposals::Proposal.last.scope).to eq(scope)
       end
 
       it "can be edited after creating a draft" do
-        click_link "New proposal"
+        click_link "New idea"
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         fill_category_and_scope(category, scope)
         click_button "Preview"
-        click_link "Modify the proposal"
-        fill_in :proposal_title, with: "This proposal is modified"
+        click_link "Modify the idea"
+        fill_in :proposal_title, with: "This idea is modified"
         click_button "Preview"
-        expect(page).to have_content("This proposal is modified")
+        expect(page).to have_content("This idea is modified")
         click_button "Publish"
-        expect(page).to have_content("Proposal successfully published.")
+        expect(page).to have_content("Idea successfully published.")
       end
 
       context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
         it "can add image" do
-          click_link "New proposal"
+          click_link "New idea"
           fill_in :proposal_title, with: proposal_title
           fill_in :proposal_body, with: proposal_body
           fill_category_and_scope(category, scope)
           attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
           click_button "Preview"
           click_button "Publish"
-          expect(page).to have_content("Proposal successfully published.")
+          expect(page).to have_content("Idea successfully published.")
         end
       end
 
@@ -120,7 +120,7 @@ describe "User creates proposal simply", type: :system do
         let!(:draft) { create(:proposal, :draft, component: component, users: [user]) }
 
         before do
-          click_link "New proposal"
+          click_link "New idea"
           path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
           expect(page).to have_current_path(path)
           fill_category_and_scope(category, scope)
@@ -131,17 +131,8 @@ describe "User creates proposal simply", type: :system do
         it "can finish proposal" do
           click_button "Preview"
           click_button "Publish"
-          expect(page).to have_content("Proposal successfully published.")
+          expect(page).to have_content("Idea successfully published.")
         end
-
-        # Decidim 0.25 raises MiniMagick::Error when trying to attach malicious.jpg
-        # context "when uploading a file", processing_uploads_for: Decidim::AttachmentUploader do
-        #   it "shows error message when image is malicious" do
-        #     attach_file(:proposal_add_photos, Decidim::Dev.asset("malicious.jpg"))
-        #     click_button "Preview"
-        #     expect(page).to have_content("There was a problem saving the proposal")
-        #   end
-        # end
       end
     end
   end
@@ -153,12 +144,12 @@ describe "User creates proposal simply", type: :system do
     end
 
     it "creates a new proposal without category and scope" do
-      click_link "New proposal"
+      click_link "New idea"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
       click_button "Preview"
       click_button "Publish"
-      expect(page).to have_content("Proposal successfully published.")
+      expect(page).to have_content("Idea successfully published.")
     end
   end
 

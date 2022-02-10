@@ -31,14 +31,14 @@ describe "User creates proposal simply", type: :system do
       login_as user, scope: :user
       visit_component
       click_link proposal.title["en"]
-      click_link "Edit proposal"
+      click_link "Edit idea"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
     end
 
     it "can be edited" do
       click_button "Save"
-      expect(page).to have_content("Proposal successfully updated")
+      expect(page).to have_content("Idea successfully updated")
       expect(Decidim::Proposals::Proposal.last.title["en"]).to eq(proposal_title)
       expect(Decidim::Proposals::Proposal.last.body["en"]).to eq(proposal_body)
     end
@@ -47,44 +47,24 @@ describe "User creates proposal simply", type: :system do
       it "can add image" do
         attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
         click_button "Save"
-        expect(page).to have_content("Proposal successfully updated")
+        expect(page).to have_content("Idea successfully updated")
       end
 
       it "can add images" do
         attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
         click_button "Save"
-        click_link "Edit proposal"
+        click_link "Edit idea"
         attach_file(:proposal_add_photos, Decidim::Dev.asset("city2.jpeg"))
         click_button "Save"
-        expect(page).to have_content("Proposal successfully updated")
+        expect(page).to have_content("Idea successfully updated")
         expect(Decidim::Proposals::Proposal.last.attachments.count).to eq(2)
       end
 
       it "can add pdf document" do
         attach_file(:proposal_add_photos, Decidim::Dev.asset("Exampledocument.pdf"))
         click_button "Save"
-        expect(page).to have_content("Proposal successfully updated")
+        expect(page).to have_content("Idea successfully updated")
       end
-
-      # Decidim 0.25 raises MiniMagick::Error when trying to attach malicious.jpg
-      # describe "malicious image" do
-      #   let(:malicious_image) { Decidim::Dev.asset("malicious.jpg") }
-
-      #   it "shows error message" do
-      #     attach_file(:proposal_add_photos, malicious_image)
-      #     click_button "Save"
-      #     expect(page).to have_content("There was a problem saving the proposal")
-      #   end
-
-      #   it "cant add after normal image" do
-      #     attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
-      #     click_button "Save"
-      #     click_link "Edit proposal"
-      #     attach_file(:proposal_add_photos, malicious_image)
-      #     click_button "Save"
-      #     expect(page).to have_content("There was a problem saving the proposal")
-      #   end
-      # end
     end
   end
 end

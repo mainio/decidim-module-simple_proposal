@@ -1,19 +1,358 @@
 fi:
+  activemodel:
+    attributes:
+      close_meeting:
+        proposal_ids: Ideaa luotu tapaamisessa
+      project:
+        proposal_ids: Liittyvät ideat
+      proposal:
+        user_group_id: Luo idea käyttäjänä
+      result:
+        proposals: Sisällytetyt ideat
+    models:
+      decidim/accountability/proposal_linked_event: Idea sisältyy tulokseen
+      decidim/proposals/accepted_proposal_event: Idea etenee äänestykseen
+      decidim/proposals/admin/update_proposal_category_event: Idean aihepiiri muutettu
+      decidim/proposals/admin/update_proposal_scope_event: Idean teema muutettu
+      decidim/proposals/creation_enabled_event: Idean luominen käytössä
+      decidim/proposals/endorsing_enabled_event: Idean suosittelu käytössä
+      decidim/proposals/evaluating_proposal_event: Idea on arvioitavana
+      decidim/proposals/proposal_mentioned_event: Idea mainittiin
+      decidim/proposals/publish_proposal_event: Idea julkaistiin
+      decidim/proposals/rejected_proposal_event: Idea ei edennyt äänestykseen
+      decidim/proposals/voting_enabled_event: Idean äänestys käytössä
+  activerecord:
+    models:
+      decidim/proposals/proposal:
+        one: Idea
+        other: Ideat
   decidim:
-    proposals:
+    accountability:
+      results:
+        show:
+          stats:
+            proposals: Ideat
+    admin:
+      filters:
+        proposals:
+          state_eq:
+            values:
+              accepted: Etenee äänestykseen
+              rejected: Ei etene äänestykseen
+    assemblies:
+      statistics:
+        proposals_count: Ideaa
+    components:
+      component_order_selector:
+        order:
+          proposal: Idea
+    devise:
+      registrations:
+        new:
+          subtitle: Rekisteröidy osallistuaksesi keskusteluihin ja kannattaaksesi ideoita.
+    events:
+      accountability:
+        proposal_linked:
+          email_intro: 'Idea "%{proposal_title}" on liitetty tulokseen. Voit tutustua siihen tältä sivulta:'
+          notification_title: Idea <a href="%{proposal_path}">%{proposal_title}</a> on sisällytetty tulokseen <a href="%{resource_path}">%{resource_title}</a>.
+        result_progress_updated:
+          email_outro: Tämä ilmoitus on lähetetty sinulle, koska seuraat ideaa "%{proposal_title}" ja se sisältyy tulokseen "%{resource_title}". Voit lopettaa ilmoitusten vastaanottamisen edellä esitetyn linkin kautta.
       proposals:
-        form_view:
-          cancel: Peruuta
+        creation_enabled:
+          email_intro: 'Voit nyt luoda uusia ideoita osallistumistilassa %{participatory_space_title}! Aloita osallistuminen tällä sivulla:'
+          email_subject: Ideoita on nyt mahdollista laatia osallistumistilassa %{participatory_space_title}
+          notification_title: Voit nyt esittää <a href="%{resource_path}">uusia ideoita</a> osallistumistilassa <a href="%{participatory_space_url}">%{participatory_space_title}</a>
+        endorsing_enabled:
+          email_intro: 'Voit suositella ideoita osallistumistilassa %{participatory_space_title}! Aloita osallistuminen tällä sivulla:'
+          email_subject: Ideoiden suosittelu on alkanut kohteelle %{participatory_space_title}
+        proposal_accepted:
+          affected_user:
+            email_intro: 'Ideasi "%{resource_title}" etenee äänestykseen. Voit lukea vastauksen täältä:'
+            email_subject: Ideasi etenee äänestykseen
+            notification_title: Ideasi <a href="%{resource_path}">%{resource_title}</a> etenee äänestykseen.
+          follower:
+            email_intro: 'Idea "%{resource_title}" etenee äänestykseen. Voit lukea vastauksen täältä:'
+            email_subject: Seuraamasi idea etenee äänestykseen
+            notification_title: Idea <a href="%{resource_path}">%{resource_title}</a> etenee äänestykseen.
+        proposal_evaluating:
+          affected_user:
+            email_intro: 'Ideaasi "%{resource_title}" arvioidaan parhaillaan. Voit tarkistaa vastauksen täältä:'
+            email_subject: Ideasi arvioidaan
+            notification_title: Ideasi <a href="%{resource_path}">%{resource_title}</a> arvioidaan.
+          follower:
+            email_intro: 'Ideaa "%{resource_title}" arvioidaan parhaillaan. Voit tarkistaa vastauksen tältä sivulla:'
+            email_subject: Seuraamasi idea on arvioitavana
+            notification_title: Idea <a href="%{resource_path}">%{resource_title}</a> on arvioitavana.
+        proposal_mentioned:
+          email_intro: Ideasi "%{mentioned_proposal_title}" on mainittu <a href="%{resource_url}">tämän osallistumistilan</a> kommentissa.
+          email_subject: Ideasi "%{mentioned_proposal_title}" on mainittu
+          notification_title: Ideasi %{mentioned_proposal_title} on mainittu <a href="%{resource_path}">tässä osallistumistilassa</a> kommentissa.
+        proposal_published:
+          email_subject: Uusi idea "%{resource_title}", jonka on luonut %{author_nickname}
+          notification_title: Idea <a href="%{resource_path}">%{resource_title}</a> julkaistiin tekijän <a href="%{author_path}">%{author_name} %{author_nickname}</a> toimesta.
+        proposal_published_for_space:
+          email_intro: Idea "%{resource_title}", jota seuraat, on lisätty kohteeseen "%{participatory_space_title}".
+          email_subject: Uusi idea "%{resource_title}" lisätty kohteeseen %{participatory_space_title}
+          notification_title: Idea <a href="%{resource_path}">%{resource_title}</a> on lisätty kohteeseen %{participatory_space_title}
+        proposal_rejected:
+          affected_user:
+            email_intro: 'Ideasi "%{resource_title}" ei etene äänestykseen. Voit lukea vastauksen täältä:'
+            email_subject: Ideasi ei etene äänestykseen
+            notification_title: Ideasi <a href="%{resource_path}">%{resource_title}</a> ei etene äänestykseen.
+          follower:
+            email_intro: 'Idea "%{resource_title}" ei etene äänestykseen. Voit lukea vastauksen tällä sivulla:'
+            email_subject: Seuraamasi idea ei etene äänestykseen
+            notification_title: Idea <a href="%{resource_path}">%{resource_title}</a> ei etene äänestykseen.
+        proposal_update_category:
+          email_intro: 'Hallinnointikäyttäjä on päivittänyt ideasi aihepiiriin "%{resource_title}", tarkista se tältä sivulta:'
+          email_outro: Tämä ilmoitus on lähetetty sinulle, koska olet idean tekijä.
+          email_subject: Idean %{resource_title} aihepiiri on päivitetty
+          notification_title: Hallinnointikäyttäjä on päivittänyt idean <a href="%{resource_path}">%{resource_title}</a> aihepiirin.
+        proposal_update_scope:
+          email_intro: 'Hallintakäyttäjä on päivittänyt ideasi "%{resource_title}" teeman, tarkista se tältä sivulta:'
+          email_subject: Idean %{resource_title} teema on päivitetty
+          notification_title: Hallintakäyttäjä on päivittänyt idean <a href="%{resource_path}">%{resource_title}</a> teeman.
+        voting_enabled:
+          email_intro: 'Voit kannattaa ideoita kohteessa %{participatory_space_title}! Osallistu tällä sivulla:'
+          email_subject: Ideoiden kannattaminen on alkanut kohteessa %{participatory_space_title}
+          notification_title: Voit nyt <a href="%{resource_path}">kannattaa ideoita</a> kohteessa <a href="%{participatory_space_url}">%{participatory_space_title}</a>
+    filters:
+      linked_classes:
+        proposal: Ideat
+    gamification:
+      badges:
+        accepted_proposals:
+          conditions:
+            '0': Valitse kiinnostuksesi mukaan osallistumistila, jossa ideoiden jättäminen on mahdollista
+          description: Tämä kunniamerkki myönnetään, kun luot aktiivisesti uusia ideoita ja ne etenevät äänestykseen.
+          description_another: Tällä käyttäjällä on %{score} äänestykseen edennyttä ideaa.
+          description_own: Olet saanut %{score} ideaa etenemään äänestykseen.
+          name: Äänestykseen etenevät ideat
+          next_level_in: Saa vielä %{score} ideaa etenemään äänestykseen noustaksesi seuraavalle tasolle!
+          unearned_another: Tällä käyttäjällä ei ole vielä yhtään äänestykseen edennyttä ideaa.
+          unearned_own: Sinulla ei ole vielä äänestykseen edenneitä ideoita.
+        proposal_votes:
+          conditions:
+            '0': Selaa muiden ihmisten ideoita ja käytä aikaa tutustumalla niihin
+            '1': Tue ideoita, joita pidät tai jotka kiinnostavat sinua
+          description: Tämä kunniamerkki myönnetään, kun tuet muiden ihmisten ideoita.
+          description_another: Tämä käyttäjä on kannattanut %{score} ideaa.
+          description_own: Olet kannattanut %{score} ideaa.
+          name: Ideoiden kannatukset
+          next_level_in: Kannata %{score} ideaa noustaksesi seuraavalle tasolle!
+          unearned_another: Tämä käyttäjä ei ole vielä kannattanut yhtään ideaa.
+          unearned_own: Et ole vielä kannattanut ideoita.
+        proposals:
+          conditions:
+            '0': Valitse kiinnostuksesi mukaan osallistumistila, jossa ideoiden jättäminen on mahdollista
+            '1': Luo uusi idea
+          description: Tämä kunniamerkki myönnetään, kun luot aktiivisesti uusia ideoita.
+          description_another: Tämä käyttäjä on luonut %{score} ideaa.
+          description_own: Olet luonut %{score} ideaa.
+          name: Ideat
+          next_level_in: Luo %{score} ideaa noustaksesi seuraavalle tasolle!
+          unearned_another: Tämä käyttäjä ei ole vielä luonut ideoita.
+          unearned_own: Et ole vielä luonut ideoita.
+    metrics:
+      accepted_proposals:
+        description: Äänestykseen etenevien ideoiden määrä
+        object: ideat
+        title: Äänestykseen etenevät ideat
+      endorsements:
+        description: Ideoihin kohdistuneiden suositusten määrä
+      proposals:
+        description: Ideoiden määrä
+        object: ideat
+        title: Ideat
+      votes:
+        description: Ideoihin kohdistuneiden kannatusten määrä
+    notifications_settings:
+      show:
+        own_activity: Oma toiminta, kuten omia ideoita koskevat kommentit tai maininnat
+    pages:
+      home:
+        extended:
+          proposals: Ideat
+          proposals_explanation: Tee ideoita, tue muiden tekemiä ideoita ja edistä muutoksia, joita haluat nähdä.
+        statistics:
+          proposals_accepted: Äänestykseen eteneviä ideoita
+          proposals_count: Ideoita
+    participatory_processes:
+      participatory_process_groups:
+        highlighted_proposals:
+          proposals: Ideat
+      statistics:
+        proposals_count: Ideaa
+    participatory_spaces:
+      highlighted_proposals:
+        see_all: Näytä kaikki ideat (%{count} kpl)
+    proposals:
+      actions:
+        answer_proposal: Vastaa ideaan
+        edit_proposal: Muokkaa ideaa
+        new: Uusi idea
+        show: Näytä idea
+      admin:
+        exports:
+          proposals: Ideat
+        models:
+          proposal:
+            name: Idea
+        participatory_texts:
+          publish:
+            success: Kaikki ideat on julkaistu
+        proposal_answers:
+          form:
+            accepted: Etenee äänestykseen
+            rejected: Ei etene äänestykseen
+      answers:
+        accepted: Etenee äänestykseen
+        rejected: Ei etene äänestykseen
+      application_helper:
+        filter_state_values:
+          accepted: Äänestykseen etenevät
+          rejected: Ei etene äänestykseen
+        filter_type_values:
+          proposals: Ideat
+      collaborative_drafts:
+        collaborative_draft:
+          publish:
+            irreversible_action_modal:
+              ok: Julkaise ideana
+        show:
+          final_proposal: lopullinen idea
+          published_proposal: julkaistu idea
+        update:
+          error: Idean tallennus epäonnistui.
+      create:
+        success: Idean luonti onnistui. Idea on tallennettu luonnoksena.
+      destroy_draft:
+        error: Idean poistaminen epäonnistui.
+        success: Idean poistaminen onnistui.
+      last_activity:
+        new_proposal_at_html: "<span>Uusi idea osoitteessa %{link}</span>"
+        proposal_updated_at_html: "<span>Idea päivitetty osoitteessa %{link}</span>"
+      models:
+        proposal:
+          fields:
+            official_proposal: Virallinen idea
+      new:
+        limit_reached: Et voi luoda uusia ideoita, koska olet ylittänyt rajan.
+      proposals:
+        compare:
+          no_similars_found: Hyvin tehty! Vastaavia ideoita ei löytynyt
+          title: Vastaavat ideat
+        count:
+          proposals_count:
+            one: "%{count} idea"
+            other: "%{count} ideaa"
         edit:
+          gallery_legend: "(Valinnainen) Lisää kuva ideakorttiin"
           send: Tallenna
+          title: Muokkaa ideaa
         edit_draft:
           send: Esikatsele
+          title: Muokkaa ideaa
+        filters:
+          my_proposals: Omat ideat
+        form_view:
+          cancel: Peruuta
+        index:
+          new_proposal: Uusi idea
+          see_all_withdrawn: Näytä kaikki peruutetut ideat
+          view_proposal: Näytä idea
         new:
           send: Esikatsele
+          title: Luo ideasi
+        orders:
+          label: 'Järjestä ideat:'
+        preview:
+          announcement_body: Ideasi on tallennettu luonnoksena. Se täytyy julkaista, jotta se tulee näkyviin sivustolle.
+          announcement_title: Ideasi ei ole vielä julkaistu
+          modify: Muokkaa ideaa
+          proposal_edit_before_minutes:
+            one: Voit muokata tätä ideaa ensimmäisen minuutin kuluttua idean julkaisemisesta. Kun tämä aikaikkuna sulkeutuu, et pysty muokkaamaan ideaa.
+            other: Voit muokata tätä ideaa ensimmäisten %{count} minuutin aikana idean julkaisemisesta. Kun tämä aikaikkuna sulkeutuu, et pysty muokkaamaan ideaa.
+          title: Julkaise ideasi
+        proposal:
+          view_proposal: Näytä idea
+        proposals:
+          empty: Ei vielä yhtään ideaa
+          empty_filters: Ei yhtään ideaa annetuilla hakuehdoilla
         show:
-          back_to_list: Takaisin kaikkiin ehdotuksiin
-      collaborative_drafts:
+          back_to_list: Takaisin kaikkiin ideoihin
+          edit_proposal: Muokkaa ideaa
+          link_to_collaborative_draft_help_text: Tämä idea on yhteistyöluonnoksen tulos. Tarkastele historiaa
+          link_to_promoted_emendation_help_text: Tämä idea on peräisin toisen ehdotuksen muutoksesta
+          link_to_proposal_from_emendation_text: Näytä idea
+          proposal_accepted_reason: 'Tämä idea etenee äänestykseen, koska:'
+          proposal_in_evaluation_reason: Tämä idea on arvioitavana
+          proposal_rejected_reason: 'Tämä idea ei etene äänestykseen, koska:'
+          withdraw_btn_hint: Jos muutat mieltäsi, voit perua ideasi, mikäli se ei ole saanut kannatusta. Ideaa ei poisteta, se näkyy peruutettujen ideoiden luettelossa.
+          withdraw_proposal: Peruuta idea
         update:
-          error: Ehdotuksen tallennus epäonnistui.
+          title: Muokkaa ideaa
+        voting_rules:
+          can_accumulate_supports_beyond_threshold:
+            description: Jokainen idea voi kerätä yli %{limit} kannatusta
+          proposal_limit:
+            description: Voit luoda enintään %{limit} ideaa.
+          threshold_per_proposal:
+            description: Jotta ideat vahvistettaisiin, niiden on saavutettava %{limit} kannatusta
+          vote_limit:
+            description: Voit kannattaa enintään %{limit} ideaa.
+        wizard_aside:
+          info: Olet luomassa <strong>ideaa</strong>.
+        wizard_steps:
+          step_1: Luo ideasi
+      proposals_picker:
+        choose_proposals: Valitse ideat
+        more_proposals: Ideoita on vielä %{number} kpl lisää. Muuta hakuehtoja löytääksesi ne.
+        no_proposals: Hakuehtosi eivät vastaa yhtään ideaa tai yhtään ideaa ei vielä ole olemassa.
+      publish:
+        success: Idean julkaisu onnistui.
+      publish_answers:
+        success: Ideoiden vastausten julkaisu onnistui.
+      update:
+        success: Idean päivittäminen onnistui.
       update_draft:
-        error: Ehdotuksen tallennus epäonnistui.
+        error: Idean tallennus epäonnistui.
+        success: Idean päivitys onnistui.
+      versions:
+        proposals:
+          back_to_resource: Palaa ideaan
+      withdraw:
+        errors:
+          has_supports: Tätä ideaa ei voi peruuttaa, koska sitä on jo tuettu.
+    resource_links:
+      copied_from_component:
+        proposal_proposal: Liittyvät ideat
+      included_projects:
+        project_result: 'Sisältyy seuraaviin suunnitelmiin:'
+      included_proposals:
+        project_proposal: 'Tähän suunnitelmaan liittyvät ideat:'
+        proposal_project: 'Idea sisältyy seuraaviin suunnitelmiin:'
+        proposal_result: 'Idea sisältyy seuraaviin tuloksiin:'
+        result_proposal: Tähän tulokseen liittyvät ideat
+      proposals_from_meeting:
+        meeting_proposal: 'Liittyvät ideat:'
+    shared:
+      flag_modal:
+        spam: Sisältää klikkihoukutteita, mainostusta, huijauksia tai bottiskriptejä.
+    sortitions:
+      sortitions:
+        count:
+          proposals_count:
+            one: 1 idea
+            other: "%{count} ideaa"
+        linked_sortitions:
+          selected_proposals: Valitut ideat
+        results_count:
+          count:
+            one: valittu idea
+            other: valitut ideat
+        show:
+          candidate_proposals_info: 'Satunnaisvalinta tehtiin seuraavien ideoiden (%{category_label}) välillä, seuraavilla tunnuksilla (lihavoituna valitut ideat)  '
+          proposals_selected_by_sortition: Ideat, jotka on valittu satunnaisvalinnassa
+    statistics:
+      proposals_accepted: Hyväksyttyä ideaa
