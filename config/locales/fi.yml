@@ -49,8 +49,6 @@ fi:
       component_order_selector:
         order:
           proposal: Idea
-      proposals:
-        name: Ideat
     devise:
       registrations:
         new:

@@ -49,8 +49,6 @@ en:
       component_order_selector:
         order:
           proposal: Idea
-      proposals:
-        name: Ideas
     devise:
       registrations:
         new:
