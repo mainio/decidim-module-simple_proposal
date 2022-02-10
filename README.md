@@ -4,11 +4,12 @@
 [![codecov](https://codecov.io/gh/mainio/decidim-module-simple_proposal/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-simple_proposal)
 
 ** SINCE 0.25 we decided to change following translations: **
-``
+
+```
 Proposal -> Idea
 Accepted -> Proceeds to voting
 Rejected -> Does not proceed to voting
-``
+```
 
 ** THIS MODULE OVERRIDES CORE FUNCTIONALITY OF DECIDIM-PROPOSALS AND CAN CAUSE UNEXPECTED SIDE EFFECTS! DO NOT USE IF YOU DONT KNOW FOR SURE WHAT YOU ARE DOING! **
 
