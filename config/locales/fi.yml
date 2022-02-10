@@ -3,9 +3,12 @@ fi:
     attributes:
       close_meeting:
         proposal_ids: Ideaa luotu tapaamisessa
+      collaborative_draft:
+        has_address: Idealla on sijainti
       project:
         proposal_ids: Liittyvät ideat
       proposal:
+        has_address: Idealla on sijainti
         user_group_id: Luo idea käyttäjänä
       result:
         proposals: Sisällytetyt ideat
@@ -46,6 +49,8 @@ fi:
       component_order_selector:
         order:
           proposal: Idea
+      proposals:
+        name: Ideat
     devise:
       registrations:
         new:

@@ -3,9 +3,12 @@ en:
     attributes:
       close_meeting:
         proposal_ids: Ideas created in the meeting
+      collaborative_draft:
+        has_address: Has address
       project:
         proposal_ids: Related ideas
       proposal:
+        has_address: Has address
         user_group_id: Create idea as
       result:
         proposals: Included ideas
@@ -46,6 +49,8 @@ en:
       component_order_selector:
         order:
           proposal: Idea
+      proposals:
+        name: Ideas
     devise:
       registrations:
         new:
