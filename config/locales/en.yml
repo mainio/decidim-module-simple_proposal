@@ -12,10 +12,15 @@ en:
     models:
       decidim/accountability/proposal_linked_event: Idea included in a result
       decidim/proposals/accepted_proposal_event: Idea proceeds to voting
+      decidim/proposals/admin/update_proposal_category_event: Idea category changed
+      decidim/proposals/admin/update_proposal_scope_event: Idea scope changed
+      decidim/proposals/creation_enabled_event: Idea creation enabled
+      decidim/proposals/endorsing_enabled_event: Idea endorsing enabled
       decidim/proposals/evaluating_proposal_event: Idea is being evaluated
       decidim/proposals/proposal_mentioned_event: Idea mentioned
       decidim/proposals/publish_proposal_event: Idea published
       decidim/proposals/rejected_proposal_event: Idea does not proceed to voting
+      decidim/proposals/voting_enabled_event: Idea voting enabled
   activerecord:
     models:
       decidim/proposals/proposal:
@@ -59,6 +64,7 @@ en:
           notification_title: You can now put forward <a href="%{resource_path}">new ideas</a> in <a href="%{participatory_space_url}">%{participatory_space_title}</a>
         endorsing_enabled:
           email_intro: 'You can endorse ideas in %{participatory_space_title}! Start participating in this page:'
+          email_subject: Idea endorsing has started for %{participatory_space_title}
         proposal_accepted:
           affected_user:
             email_intro: 'Your idea "%{resource_title}" proceeds to voting. You can read the answer in this page:'
@@ -71,10 +77,16 @@ en:
         proposal_evaluating:
           affected_user:
             email_intro: 'Your idea "%{resource_title}" is currently being evaluated. You can check for an answer in this page:'
+            email_subject: Your idea is being evaluated
+            notification_title: Your idea <a href="%{resource_path}">%{resource_title}</a> is being evaluated.
           follower:
             email_intro: 'The idea "%{resource_title}" is currently being evaluated. You can check for an answer in this page:'
             email_subject: An idea you're following is being evaluated
             notification_title: The <a href="%{resource_path}">%{resource_title}</a> idea is being evaluated.
+        proposal_mentioned:
+          email_intro: Your idea "%{mentioned_proposal_title}" has been mentioned <a href="%{resource_url}">in this space</a> in the comments.
+          email_subject: Your idea "%{mentioned_proposal_title}" has been mentioned
+          notification_title: Your idea "%{mentioned_proposal_title}" has been mentioned <a href="%{resource_path}">in this space</a> in the comments.
         proposal_published:
           email_subject: New idea "%{resource_title}" by %{author_nickname}
           notification_title: The <a href="%{resource_path}">%{resource_title}</a> idea was published by <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
@@ -91,6 +103,15 @@ en:
             email_intro: 'The idea "%{resource_title}" does not proceed to voting. You can read the answer in this page:'
             email_subject: A idea you're following does not proceed to voting
             notification_title: The <a href="%{resource_path}">%{resource_title}</a> idea does not proceed to voting.
+        proposal_update_category:
+          email_intro: 'An admin has updated the category of your idea "%{resource_title}", check it out in this page:'
+          email_outro: You have received this notification because you are the author of the idea.
+          email_subject: The %{resource_title} idea category has been updated
+          notification_title: The <a href="%{resource_path}">%{resource_title}</a> idea category has been updated by an admin.
+        proposal_update_scope:
+          email_intro: 'An admin has updated the scope of your idea "%{resource_title}", check it out in this page:'
+          email_subject: The %{resource_title} idea scope has been updated
+          notification_title: The <a href="%{resource_path}">%{resource_title}</a> idea scope has been updated by an admin.
         voting_enabled:
           email_intro: 'You can support ideas in %{participatory_space_title}! Start participating in this page:'
           email_subject: Idea support has started for %{participatory_space_title}
@@ -137,10 +158,14 @@ en:
         description: Ideas proceeding to voting
         object: ideas
         title: Ideas proceeding to voting
+      endorsements:
+        description: Number of endorsements to ideas
       proposals:
         description: Number of ideas
         object: ideas
         title: Ideas
+      votes:
+        description: Number of supports to ideas
     notifications_settings:
       show:
         own_activity: My own activity, like when someone comments in my ideas or mentions me
@@ -163,6 +188,7 @@ en:
         see_all: See all ideas (%{count})
     proposals:
       actions:
+        answer_proposal: Answer idea
         edit_proposal: Edit idea
         new: New idea
         show: Show idea
@@ -189,12 +215,23 @@ en:
         filter_type_values:
           proposals: Ideas
       collaborative_drafts:
+        collaborative_draft:
+          publish:
+            irreversible_action_modal:
+              ok: Publish as a Idea
+        show:
+          final_proposal: final idea
+          published_proposal: published idea
         update:
           error: There was a problem saving the idea.
       create:
         success: Idea successfully created. Saved as a draft.
+      destroy_draft:
+        error: There was a problem deleting the collaborative draft.
+        success: Idea draft was successfully deleted.
       last_activity:
         new_proposal_at_html: "<span>New idea at %{link}</span>"
+        proposal_updated_at_html: "<span>Idea updated at %{link}</span>"
       models:
         proposal:
           fields:
@@ -215,6 +252,7 @@ en:
           title: Edit idea
         edit_draft:
           send: Preview
+          title: Edit Idea Draft
         filters:
           my_proposals: My ideas
         form_view:
@@ -229,10 +267,13 @@ en:
         orders:
           label: 'Order ideas by:'
         preview:
+          announcement_body: Your idea has been saved as a draft. It needs to be published for it to appear on the site.
+          announcement_title: Your idea has not yet been published
           modify: Modify the idea
           proposal_edit_before_minutes:
             one: You will be able to edit this idea during the first minute after the idea is published. Once this time window passes, you will not be able to edit the idea.
             other: You will be able to edit this idea during the first %{count} minutes after the idea is published. Once this time window passes, you will not be able to edit the idea.
+          title: Publish your idea
         proposal:
           view_proposal: View idea
         proposals:
@@ -241,6 +282,8 @@ en:
         show:
           back_to_list: Back to all ideas
           edit_proposal: Edit idea
+          link_to_collaborative_draft_help_text: This idea is the result of a collaborative draft. Review the history
+          link_to_promoted_emendation_help_text: This idea is a promoted emendation
           link_to_proposal_from_emendation_text: See the idea
           proposal_accepted_reason: 'This idea proceeds to voting because:'
           proposal_in_evaluation_reason: This idea is being evaluated
@@ -250,8 +293,12 @@ en:
         update:
           title: Update idea
         voting_rules:
+          can_accumulate_supports_beyond_threshold:
+            description: Each idea can accumulate more than %{limit} supports
           proposal_limit:
             description: You can create up to %{limit} ideas.
+          threshold_per_proposal:
+            description: In order to be validated ideas need to reach %{limit} supports
           vote_limit:
             description: You can support up to %{limit} ideas.
         wizard_aside:
@@ -262,8 +309,21 @@ en:
         choose_proposals: Choose ideas
         more_proposals: There are %{number} more ideas. Refine your search to locate them.
         no_proposals: No ideas match your search criteria or there isn't any ideas.
+      publish:
+        success: Idea successfully published.
+      publish_answers:
+        success: Ideas answers successfully published.
+      update:
+        success: Idea successfully updated.
       update_draft:
         error: There was a problem saving the idea.
+        success: Idea draft successfully updated.
+      versions:
+        proposals:
+          back_to_resource: Go back to idea
+      withdraw:
+        errors:
+          has_supports: This idea can not be withdrawn because it already has supports.
     resource_links:
       copied_from_component:
         proposal_proposal: Related ideas
@@ -294,3 +354,5 @@ en:
         show:
           candidate_proposals_info: 'The sortition was carried out among the following ideas (%{category_label}), with the following IDs (in bold the selected ideas)  '
           proposals_selected_by_sortition: Ideas selected by sortition
+    statistics:
+      proposals_accepted: Accepted Ideas
