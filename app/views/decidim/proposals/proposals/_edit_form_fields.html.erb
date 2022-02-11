@@ -33,15 +33,19 @@
 <% end %>
 
 <% if @form.geocoding_enabled? %>
-  <div class="margin-vertical-2">
+  <!-- <div class="margin-vertical-2"> -->
     <div class="field">
       <%= form.check_box :has_address, checked: form_has_address? %>
     </div>
 
     <div class="field" id="address_input">
-      <%= form.geocoding_field :address %>
+      <%= form.geocoding_field :address, placeholder: t("decidim.proposals.proposals.placeholder.address") %>
+      <div class="map" id="address_map">
+        <%= render partial: "dynamic_map_instructions" %>
+        <%= dynamic_map_for proposal_preview_data_for_map(@proposal) %>
+      </div>
     </div>
-  </div>
+  <!-- </div> -->
 <% end %>
 
 <% if @form.categories_enabled? %>
