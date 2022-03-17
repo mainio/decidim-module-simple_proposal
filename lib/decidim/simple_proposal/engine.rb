@@ -15,6 +15,12 @@ module Decidim
 
           # Remove after https://github.com/decidim/decidim/pull/8762
           Decidim::Map::Autocomplete::FormBuilder.include Decidim::SimpleProposal::AutocompleteOverride
+
+          # Allow admins to split & merge proposals more freely
+          Decidim::Proposals::Admin::ProposalsForkForm.include Decidim::SimpleProposal::Admin::ProposalForkFormOverride
+          Decidim::Proposals::Admin::SplitProposals.include Decidim::SimpleProposal::Admin::SplitProposalsOverride
+          Decidim::Proposals::Admin::MergeProposals.include Decidim::SimpleProposal::Admin::MergeProposalsOverride
+          Decidim::Proposals::Admin::Permissions.include Decidim::SimpleProposal::Admin::PermissionOverrides
         end
       end
     end
