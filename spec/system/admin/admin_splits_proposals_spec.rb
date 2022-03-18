@@ -37,14 +37,17 @@ describe "Admin splits proposals", type: :system do
       let!(:another_proposal) { create(:proposal, component: component, users: [author3]) }
       let(:author3) { create(:user, :confirmed, organization: organization) }
 
-      it "creates duplicates each proposal" do
+      it "duplicates each proposal" do
         visit current_path
         split_proposals([proposal.id, another_proposal.id])
         expect(page).to have_css(".callout.success")
         expect(page).to have_content(translated(proposal.title), count: 2)
         expect(page).to have_content(translated(another_proposal.title), count: 2)
-        expect(Decidim::Proposals::Proposal.last(2).first.authors).to eq(authors + [organization])
-        expect(Decidim::Proposals::Proposal.last.authors).to eq([author3, organization])
+        new_proposals = Decidim::Proposals::Proposal.last(2)
+        new_proposal1 = new_proposals.select { |p| p.title == proposal.title }.first
+        new_proposal2 = new_proposals.select { |p| p.title == another_proposal.title }.first
+        expect(new_proposal1.authors).to eq(authors + [organization])
+        expect(new_proposal2.authors).to eq([author3, organization])
         # Check that admin can edit split proposals
         expect(page).to have_selector(".icon.icon--pencil", count: 4)
       end
