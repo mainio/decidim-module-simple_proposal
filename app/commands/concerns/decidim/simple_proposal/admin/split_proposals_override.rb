@@ -6,6 +6,8 @@ module Decidim
       module SplitProposalsOverride
         extend ActiveSupport::Concern
         included do
+          private
+
           def create_proposal(original_proposal)
             split_proposal = Decidim::Proposals::ProposalBuilder.copy(
               original_proposal,

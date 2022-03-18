@@ -13,6 +13,8 @@ module Decidim
           Decidim::Proposals::ProposalForm.include Decidim::SimpleProposal::ProposalFormOverride
           Decidim::ScopesHelper.include Decidim::SimpleProposal::ScopesHelperOverride
 
+          Decidim::Proposals::Admin::ProposalsController.include Decidim::SimpleProposal::Admin::ProposalsControllerOverride
+
           # Remove after https://github.com/decidim/decidim/pull/8762
           Decidim::Map::Autocomplete::FormBuilder.include Decidim::SimpleProposal::AutocompleteOverride
 

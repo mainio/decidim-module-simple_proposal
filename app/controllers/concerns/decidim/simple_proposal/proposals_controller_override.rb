@@ -6,6 +6,39 @@ module Decidim
       extend ActiveSupport::Concern
 
       included do
+        def index
+          if component_settings.participatory_texts_enabled?
+            @proposals = ::Decidim::Proposals::Proposal
+                         .where(component: current_component, deleted_at: nil)
+                         .published
+                         .not_hidden
+                         .only_amendables
+                         .includes(:category, :scope)
+                         .order(position: :asc)
+            render "decidim/proposals/proposals/participatory_texts/participatory_text"
+          else
+            @base_query = search
+                          .results
+                          .where(deleted_at: nil)
+                          .published
+                          .not_hidden
+
+            @proposals = @base_query.includes(:component, :coauthorships)
+            @all_geocoded_proposals = @base_query.geocoded
+
+            @voted_proposals = if current_user
+                                 ::Decidim::Proposals::ProposalVote.where(
+                                   author: current_user,
+                                   proposal: @proposals.pluck(:id)
+                                 ).pluck(:decidim_proposal_id)
+                               else
+                                 []
+                               end
+            @proposals = paginate(@proposals)
+            @proposals = reorder(@proposals)
+          end
+        end
+
         def new
           if proposal_draft.present?
             redirect_to edit_draft_proposal_path(proposal_draft, component_id: proposal_draft.component.id, question_slug: proposal_draft.component.participatory_space.slug)
