@@ -156,6 +156,13 @@ module Decidim
           }
         end
 
+        def can_show_proposal?
+          return false if @proposal&.deleted_at.present?
+          return true if @proposal&.amendable? || current_user&.admin?
+
+          Proposal.only_visible_emendations_for(current_user, current_component).published.include?(@proposal)
+        end
+
         def fix_form_photos_and_documents
           return unless @form
 

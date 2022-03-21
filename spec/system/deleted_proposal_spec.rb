@@ -37,4 +37,13 @@ describe "Deleted proposal", type: :system do
     expect(page).to have_content(translated(proposal.title))
     expect(page).not_to have_content(translated(deleted_proposal.title))
   end
+
+  it "does not show deleted proposal" do
+    visit resource_locator(proposal).path
+    expect(page).to have_content(translated(proposal.title))
+    expect do
+      visit resource_locator(deleted_proposal).path
+      expect(page).to have_content("this just makes sure visit is completed")
+    end.to raise_error(ActionController::RoutingError)
+  end
 end

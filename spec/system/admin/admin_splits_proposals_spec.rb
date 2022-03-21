@@ -28,7 +28,6 @@ describe "Admin splits proposals", type: :system do
         expect(Decidim::Proposals::Proposal.find(proposal.id + 1).authors).to include(author)
         expect(Decidim::Proposals::Proposal.find(proposal.id + 1).authors).to include(another_author)
         expect(Decidim::Proposals::Proposal.find(proposal.id + 1).authors).to include(organization)
-        # Check that admin can edit split proposals
         expect(page).to have_selector(".icon.icon--pencil", count: 2)
       end
     end
@@ -48,12 +47,12 @@ describe "Admin splits proposals", type: :system do
         new_proposal2 = new_proposals.select { |p| p.title == another_proposal.title }.first
         expect(new_proposal1.authors).to eq(authors + [organization])
         expect(new_proposal2.authors).to eq([author3, organization])
-        # Check that admin can edit split proposals
         expect(page).to have_selector(".icon.icon--pencil", count: 4)
       end
     end
 
     context "when proposal has votes" do
+      # :with_votes creates 5 votes by default
       let(:proposal) { create(:proposal, :with_votes, component: component, users: authors) }
 
       it "does not copy votes" do
@@ -62,7 +61,6 @@ describe "Admin splits proposals", type: :system do
         expect(page).to have_css(".callout.success")
         expect(page).to have_content(translated(proposal.title), count: 2)
         expect(Decidim::Proposals::Proposal.count).to eq(2)
-        # :with_votes creates 5 votes by default
         expect(Decidim::Proposals::Proposal.find(proposal.id).votes.count).to eq(5)
         expect(Decidim::Proposals::Proposal.last.votes.count).to eq(0)
         expect(page).to have_selector(".icon.icon--pencil", count: 2)
