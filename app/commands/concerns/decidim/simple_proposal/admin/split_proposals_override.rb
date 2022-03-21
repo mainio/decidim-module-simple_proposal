@@ -15,11 +15,10 @@ module Decidim
               action_user: form.current_user,
               extra_attributes: {
                 component: form.target_component
-              },
-              skip_link: true
+              }
             )
 
-            proposals_to_link = links_for(original_proposal)
+            proposals_to_link = (links_for(original_proposal) + form.proposals).uniq
             split_proposal.link_resources(proposals_to_link, "copied_from_component")
 
             # So that we know that proposal is split

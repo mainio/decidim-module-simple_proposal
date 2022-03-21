@@ -42,6 +42,15 @@ describe "Admin merges proposals", type: :system do
       expect(page).not_to have_selector("tr[data-id='#{another_proposal.id}']")
     end
 
+    it "links new proposal to deleted proposals" do
+      visit current_path
+      merge_proposals([proposal, another_proposal])
+      expect(page).to have_css(".callout.success")
+      linked_proposals = Decidim::Proposals::Proposal.last.linked_resources(:proposals, "copied_from_component")
+      expect(linked_proposals.count).to eq(2)
+      expect(linked_proposals).to include(proposal, another_proposal)
+    end
+
     context "with multiple authors" do
       let(:author3) { create(:user, :confirmed, organization: organization) }
       let(:authors) { [author, another_author] }

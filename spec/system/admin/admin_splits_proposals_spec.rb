@@ -32,6 +32,15 @@ describe "Admin splits proposals", type: :system do
       end
     end
 
+    it "links new proposal to original proposal" do
+      visit current_path
+      split_proposals(proposal.id)
+      expect(page).to have_css(".callout.success")
+      linked_proposals = Decidim::Proposals::Proposal.last.linked_resources(:proposals, "copied_from_component")
+      expect(linked_proposals.count).to eq(1)
+      expect(linked_proposals).to include(proposal)
+    end
+
     describe "split multiple proposals" do
       let!(:another_proposal) { create(:proposal, component: component, users: [author3]) }
       let(:author3) { create(:user, :confirmed, organization: organization) }

@@ -11,7 +11,8 @@ module Decidim
           def merge_proposals
             transaction do
               merged_proposal = create_new_proposal
-              merged_proposal.link_resources(proposals_to_link, "copied_from_component")
+              link_proposals = (proposals_to_link + form.proposals).uniq
+              merged_proposal.link_resources(link_proposals, "copied_from_component")
               form.proposals.each do |proposal|
                 proposal.update(deleted_at: Time.current)
               end
