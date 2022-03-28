@@ -18,6 +18,25 @@ module Decidim
         validate :check_category
         validate :check_scope
 
+        def map_model(model)
+          super
+
+          body = translated_attribute(model.body)
+          @suggested_hashtags = Decidim::ContentRenderers::HashtagRenderer.new(body).extra_hashtags.map(&:name).map(&:downcase)
+
+          # The scope attribute is with different key (decidim_scope_id), so it
+          # has to be manually mapped.
+          self.scope_id = model.scope.id if model.scope
+
+          self.has_address = true if model.address.present?
+
+          # Proposals have the "photos" field reserved for the proposal card image
+          # so we don't want to show all photos there. Instead, only show the
+          # first photo.
+          self.photos = [model.photos.first].compact.select { |p| p.weight.zero? }
+          self.documents = model.attachments - photos
+        end
+
         def categories_enabled?
           categories&.any?
         end

@@ -24,7 +24,7 @@ module Decidim
           Decidim::Proposals::Admin::MergeProposals.include Decidim::SimpleProposal::Admin::MergeProposalsOverride
           Decidim::Proposals::Admin::Permissions.include Decidim::SimpleProposal::Admin::PermissionOverrides
 
-          # Fix attachments, remove after #8681
+          # Fix attachments (images as documents), should not be needed after #8681
           Decidim::Proposals::UpdateProposal.include Decidim::SimpleProposal::UpdateProposalOverride
         end
       end
