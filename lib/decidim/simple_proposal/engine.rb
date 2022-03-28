@@ -23,6 +23,9 @@ module Decidim
           Decidim::Proposals::Admin::SplitProposals.include Decidim::SimpleProposal::Admin::SplitProposalsOverride
           Decidim::Proposals::Admin::MergeProposals.include Decidim::SimpleProposal::Admin::MergeProposalsOverride
           Decidim::Proposals::Admin::Permissions.include Decidim::SimpleProposal::Admin::PermissionOverrides
+
+          # Fix attachments, remove after #8681
+          Decidim::Proposals::UpdateProposal.include Decidim::SimpleProposal::UpdateProposalOverride
         end
       end
     end
