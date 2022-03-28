@@ -117,12 +117,12 @@ module Decidim
           end
         end
 
-        # Overridden because of a core bug when the command posts the "invalid"
-        # signal and when rendering the form.
+        # On invalid render edit instead of edit_draft
         def update
           enforce_permission_to :edit, :proposal, proposal: @proposal
 
           @form = form_proposal_params
+
           Decidim::Proposals::UpdateProposal.call(@form, current_user, @proposal) do
             on(:ok) do |proposal|
               flash[:notice] = I18n.t("proposals.update.success", scope: "decidim")
