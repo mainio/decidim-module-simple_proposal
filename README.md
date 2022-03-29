@@ -3,15 +3,19 @@
 [![Build Status](https://github.com/mainio/decidim-module-simple_proposal/actions/workflows/ci_simple_proposal.yml/badge.svg)](https://github.com/mainio/decidim-module-simple_proposal/actions)
 [![codecov](https://codecov.io/gh/mainio/decidim-module-simple_proposal/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-simple_proposal)
 
-** SINCE 0.25 we decided to change following translations: **
+** THIS MODULE OVERRIDES CORE FUNCTIONALITY OF DECIDIM-PROPOSALS AND CAN CAUSE UNEXPECTED SIDE EFFECTS! DO NOT USE IF YOU DONT KNOW FOR SURE WHAT YOU ARE DOING! **
 
+
+** SINCE 0.25 THERE ARE NEW CHANGES AND FEATURES **
+
+- Admin can merge split and merge proposals even if proposals aren't official. Also merging adds authors, comments and combines bodies from existing proposals.
+- By default decidim destroys proposals after merge, we don't want to do it so we added deleted_at column to proposals
+- Translations:
 ```
 Proposal -> Idea
 Accepted -> Proceeds to voting
 Rejected -> Does not proceed to voting
 ```
-
-** THIS MODULE OVERRIDES CORE FUNCTIONALITY OF DECIDIM-PROPOSALS AND CAN CAUSE UNEXPECTED SIDE EFFECTS! DO NOT USE IF YOU DONT KNOW FOR SURE WHAT YOU ARE DOING! **
 
 A [Decidim](https://github.com/decidim/decidim) module that provides a simplified proposal creation.
 
@@ -27,6 +31,7 @@ And then execute:
 
 ```bash
 $ bundle
+$ bundle exec rake decidim_simple_proposal:install:migrations
 ```
 
 ## Configuration
