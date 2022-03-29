@@ -31,7 +31,8 @@ And then execute:
 
 ```bash
 $ bundle
-$ bundle exec rake decidim_simple_proposal:install:migrations
+$ bundle exec rake decidim_simple_proposal:install:migrationsz
+$ bundle exec rails db:migrate
 ```
 
 ## Configuration
