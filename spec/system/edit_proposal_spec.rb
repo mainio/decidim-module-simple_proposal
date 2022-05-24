@@ -11,7 +11,6 @@ describe "User edits proposals", type: :system do
   let(:component) do
     create(:proposal_component,
            :with_creation_enabled,
-           :with_card_image_allowed,
            :with_attachments_allowed,
            manifest: manifest,
            participatory_space: participatory_process)
