@@ -140,9 +140,8 @@ describe "User edits proposals", type: :system do
           expect(page).to have_content("RELATED IMAGES")
 
           created_proposal = Decidim::Proposals::Proposal.find(proposal.id)
-          expect(created_proposal.attachments.count).to eq(2)
-          expect(created_proposal.photos.select { |p| p.title == { "en" => "city2.jpeg" } && p.weight == 0 }.count).to eq(1)
-          expect(created_proposal.photos.select { |p| p.title == { "en" => filename } && p.weight == 1 }.count).to eq(1)
+          expect(created_proposal.attachments.count).to eq(1)
+          expect(created_proposal.photos.select { |p| p.title == { "en" => "city2" } && p.weight == 0 }.count).to eq(1)
         end
       end
     end
