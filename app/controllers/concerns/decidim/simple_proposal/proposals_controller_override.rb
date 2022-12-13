@@ -44,7 +44,7 @@ module Decidim
             redirect_to edit_draft_proposal_path(proposal_draft, component_id: proposal_draft.component.id, question_slug: proposal_draft.component.participatory_space.slug)
           else
             enforce_permission_to :create, :proposal
-            @step = :step_1
+            @step = Decidim::Proposals::ProposalsController::STEP1
             @proposal ||= Decidim::Proposals::Proposal.new(component: current_component)
             @form = form_proposal_model
             @form.body = translated_proposal_body_template
@@ -54,7 +54,7 @@ module Decidim
 
         def create
           enforce_permission_to :create, :proposal
-          @step = :step_1
+          @step = Decidim::Proposals::ProposalsController::STEP1
           @form = form(Decidim::Proposals::ProposalForm).from_params(proposal_creation_params)
 
           @proposal = Decidim::Proposals::Proposal.new(@form.attributes.except(
@@ -100,7 +100,7 @@ module Decidim
         # signal and when rendering the form.
         def update_draft
           enforce_permission_to :edit, :proposal, proposal: @proposal
-          @step = :step_1
+          @step = Decidim::Proposals::ProposalsController::STEP1
 
           @form = form_proposal_params
           Decidim::Proposals::UpdateProposal.call(@form, current_user, @proposal) do

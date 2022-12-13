@@ -32,7 +32,7 @@ describe "Admin merges proposals", type: :system do
       expect(Decidim::Proposals::Proposal.find(proposal.id).deleted_at).to be_between(10.seconds.ago, Time.current)
       expect(Decidim::Proposals::Proposal.find(another_proposal.id).deleted_at).to be_between(10.seconds.ago, Time.current)
       merge_proposal = Decidim::Proposals::Proposal.last
-      expect(merge_proposal.deleted_at).to eq(nil)
+      expect(merge_proposal.deleted_at).to be_nil
       expect(merge_proposal.body["en"]).to eq("#{proposal.body["en"]}\n\n#{another_proposal.body["en"]}")
       expect(merge_proposal.authors.count).to eq(3)
       expect(merge_proposal.authors).to include(author, another_author, organization)
