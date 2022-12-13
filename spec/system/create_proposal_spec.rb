@@ -109,7 +109,7 @@ describe "User creates proposal simply", type: :system do
           fill_in :proposal_title, with: proposal_title
           fill_in :proposal_body, with: proposal_body
           fill_category_and_scope(category, scope)
-          attach_file(:proposal_add_photos, Decidim::Dev.asset("city.jpeg"))
+          dynamically_attach_file(:proposal_photos, Decidim::Dev.asset("city.jpeg"))
           click_button "Preview"
           click_button "Publish"
           expect(page).to have_content("Idea successfully published.")

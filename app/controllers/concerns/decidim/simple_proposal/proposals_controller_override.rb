@@ -18,7 +18,7 @@ module Decidim
             render "decidim/proposals/proposals/participatory_texts/participatory_text"
           else
             @base_query = search
-                          .results
+                          .result
                           .where(deleted_at: nil)
                           .published
                           .not_hidden
@@ -145,12 +145,12 @@ module Decidim
 
         def default_filter_params
           {
-            search_text: "",
-            origin: default_filter_origin_params,
+            search_text_cont: "",
+            with_any_origin: default_filter_origin_params,
             activity: "all",
-            category_id: default_filter_category_params,
-            state: %w(accepted evaluating state_not_published not_answered rejected),
-            scope_id: default_filter_scope_params,
+            with_any_category: default_filter_category_params,
+            with_any_state: %w(accepted evaluating state_not_published not_answered rejected),
+            with_any_scope: default_filter_scope_params,
             related_to: "",
             type: "all"
           }
