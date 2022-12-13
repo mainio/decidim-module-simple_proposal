@@ -54,10 +54,10 @@ describe "User edits proposals", type: :system do
         dynamically_attach_file(:proposal_photos, Decidim::Dev.asset("city.jpeg"))
         click_button "Save"
         click_link "Edit idea"
-        dynamically_attach_file(:proposal_photos, Decidim::Dev.asset("city2.jpeg"))
+        dynamically_attach_file(:proposal_photos, Decidim::Dev.asset("city2.jpeg"), remove_before: true)
         click_button "Save"
         expect(page).to have_content("Idea successfully updated")
-        expect(Decidim::Proposals::Proposal.last.attachments.count).to eq(2)
+        expect(Decidim::Proposals::Proposal.last.attachments.count).to eq(1)
       end
 
       it "can add pdf document" do
@@ -165,9 +165,12 @@ describe "User edits proposals", type: :system do
 
       it "attachments are in different sections" do
         click_link "Edit idea"
-        # page.execute_script "window.scrollBy(0,10000)"
-        expect(page).to have_selector("#photo-#{card_image.id}[name='proposal[photos][]']", visible: :hidden)
-        expect(page).to have_selector("#document-#{document.id}[name='proposal[documents][]']", visible: :hidden)
+        page.execute_script "window.scrollBy(0,10000)"
+        # Note that there is a bug in 0.27 currently which causes extra parentheses
+        # to be added to the file name. See:
+        # https://github.com/decidim/decidim/blob/db91cf387557bfccee917e744303b25d06c691c4/decidim-core/app/cells/decidim/upload_modal_cell.rb#L155
+        expect(page).to have_selector(".attachment-details[data-filename='(#{filename})']")
+        expect(page).to have_selector(".attachment-details[data-filename='(#{filename2})']")
       end
     end
   end
