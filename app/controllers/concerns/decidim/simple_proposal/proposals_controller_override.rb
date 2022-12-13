@@ -18,7 +18,7 @@ module Decidim
             render "decidim/proposals/proposals/participatory_texts/participatory_text"
           else
             @base_query = search
-                          .results
+                          .result
                           .where(deleted_at: nil)
                           .published
                           .not_hidden
@@ -44,7 +44,7 @@ module Decidim
             redirect_to edit_draft_proposal_path(proposal_draft, component_id: proposal_draft.component.id, question_slug: proposal_draft.component.participatory_space.slug)
           else
             enforce_permission_to :create, :proposal
-            @step = :step_1
+            @step = Decidim::Proposals::ProposalsController::STEP1
             @proposal ||= Decidim::Proposals::Proposal.new(component: current_component)
             @form = form_proposal_model
             @form.body = translated_proposal_body_template
@@ -54,7 +54,7 @@ module Decidim
 
         def create
           enforce_permission_to :create, :proposal
-          @step = :step_1
+          @step = Decidim::Proposals::ProposalsController::STEP1
           @form = form(Decidim::Proposals::ProposalForm).from_params(proposal_creation_params)
 
           @proposal = Decidim::Proposals::Proposal.new(@form.attributes.except(
@@ -100,7 +100,7 @@ module Decidim
         # signal and when rendering the form.
         def update_draft
           enforce_permission_to :edit, :proposal, proposal: @proposal
-          @step = :step_1
+          @step = Decidim::Proposals::ProposalsController::STEP1
 
           @form = form_proposal_params
           Decidim::Proposals::UpdateProposal.call(@form, current_user, @proposal) do
@@ -145,12 +145,12 @@ module Decidim
 
         def default_filter_params
           {
-            search_text: "",
-            origin: default_filter_origin_params,
+            search_text_cont: "",
+            with_any_origin: default_filter_origin_params,
             activity: "all",
-            category_id: default_filter_category_params,
-            state: %w(accepted evaluating state_not_published not_answered rejected),
-            scope_id: default_filter_scope_params,
+            with_any_category: default_filter_category_params,
+            with_any_state: %w(accepted evaluating state_not_published not_answered rejected),
+            with_any_scope: default_filter_scope_params,
             related_to: "",
             type: "all"
           }

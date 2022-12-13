@@ -7,9 +7,12 @@ require "decidim/simple_proposal/version"
 Gem::Specification.new do |spec|
   spec.name = "decidim-simple_proposal"
   spec.version = Decidim::SimpleProposal::VERSION
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.0"
   spec.authors = ["Eero Lahdenperä"]
-  spec.email = ["eero.lahdenpera@mainiotech.fi"]
+  spec.email = ["info@mainiotech.fi"]
+  spec.metadata = {
+    "rubygems_mfa_required" => "true"
+  }
 
   spec.summary = "Makes creation of a proposal simple"
   spec.description = "Remove compare and complete phases from proposal creation."
