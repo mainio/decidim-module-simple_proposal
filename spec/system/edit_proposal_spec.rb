@@ -166,11 +166,8 @@ describe "User edits proposals", type: :system do
       it "attachments are in different sections" do
         click_link "Edit idea"
         page.execute_script "window.scrollBy(0,10000)"
-        # Note that there is a bug in 0.27 currently which causes extra parentheses
-        # to be added to the file name. See:
-        # https://github.com/decidim/decidim/blob/db91cf387557bfccee917e744303b25d06c691c4/decidim-core/app/cells/decidim/upload_modal_cell.rb#L155
-        expect(page).to have_selector(".attachment-details[data-filename='(#{filename})']")
-        expect(page).to have_selector(".attachment-details[data-filename='(#{filename2})']")
+        expect(page).to have_selector(".attachment-details[data-filename='#{filename}']")
+        expect(page).to have_selector(".attachment-details[data-filename='#{filename2}']")
       end
     end
   end
