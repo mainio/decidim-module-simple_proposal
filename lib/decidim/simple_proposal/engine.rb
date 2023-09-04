@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "decidim/concerns/simple_proposal/autocomplete_override"
-
 module Decidim
   module SimpleProposal
     class Engine < ::Rails::Engine
