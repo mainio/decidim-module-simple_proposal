@@ -7,7 +7,7 @@ require "decidim/simple_proposal/version"
 Gem::Specification.new do |spec|
   spec.name = "decidim-simple_proposal"
   spec.version = Decidim::SimpleProposal::VERSION
-  spec.required_ruby_version = ">= 3.0"
+  spec.required_ruby_version = ">= 3.1"
   spec.authors = ["Eero Lahdenperä"]
   spec.email = ["info@mainiotech.fi"]
   spec.metadata = {

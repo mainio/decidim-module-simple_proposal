@@ -38,6 +38,8 @@ en:
           stats:
             proposals: Ideas
     admin:
+      actions:
+        manage: Manage
       filters:
         proposals:
           state_eq:

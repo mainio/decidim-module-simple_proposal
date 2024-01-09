@@ -28,13 +28,9 @@ module Decidim
           # has to be manually mapped.
           self.scope_id = model.scope.id if model.scope
 
-          self.has_address = true if model.address.present?
+          # self.has_address = true if model.address.present?
 
-          # Proposals have the "photos" field reserved for the proposal card image
-          # so we don't want to show all photos there. Instead, only show the
-          # first photo.
-          self.photos = [model.photos.first].compact.select { |p| p.weight.zero? }
-          self.documents = model.attachments - photos
+          self.documents = model.attachments
         end
 
         def categories_enabled?

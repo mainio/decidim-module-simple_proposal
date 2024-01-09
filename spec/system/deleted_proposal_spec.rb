@@ -2,23 +2,23 @@
 
 require "spec_helper"
 
-describe "Deleted proposal", type: :system do
-  let(:organization) { create :organization, *organization_traits, available_locales: [:en] }
-  let(:participatory_process) { create :participatory_process, :with_steps, organization: organization }
+describe "Deleted proposal" do
+  let(:organization) { create(:organization, *organization_traits, available_locales: [:en]) }
+  let(:participatory_process) { create(:participatory_process, :with_steps, organization:) }
   let(:manifest_name) { "proposals" }
   let(:manifest) { Decidim.find_component_manifest(manifest_name) }
-  let!(:user) { create :user, :confirmed, organization: organization }
+  let!(:user) { create(:user, :confirmed, organization:) }
   let!(:component) do
     create(:proposal_component,
            :with_creation_enabled,
            :with_attachments_allowed,
-           manifest: manifest,
+           manifest:,
            participatory_space: participatory_process)
   end
   let(:organization_traits) { [] }
 
-  let!(:proposal) { create(:proposal, component: component) }
-  let!(:deleted_proposal) { create(:proposal, component: component, deleted_at: Time.current) }
+  let!(:proposal) { create(:proposal, component:) }
+  let!(:deleted_proposal) { create(:proposal, component:, deleted_at: Time.current) }
 
   def visit_component
     if organization_traits.include?(:secure_context)
@@ -35,7 +35,7 @@ describe "Deleted proposal", type: :system do
 
   it "index doesnt show deleted proposal" do
     expect(page).to have_content(translated(proposal.title))
-    expect(page).not_to have_content(translated(deleted_proposal.title))
+    expect(page).to have_no_content(translated(deleted_proposal.title))
   end
 
   it "does not show deleted proposal" do
