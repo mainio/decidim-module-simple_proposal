@@ -36,7 +36,7 @@ describe "User edits proposals" do
     end
 
     it "can be edited" do
-      click_link_or_button "Preview"
+      click_link_or_button "Save"
       expect(page).to have_content("Idea successfully updated")
       expect(Decidim::Proposals::Proposal.last.title["en"]).to eq(proposal_title)
       expect(Decidim::Proposals::Proposal.last.body["en"]).to eq(proposal_body)
@@ -50,7 +50,6 @@ describe "User edits proposals" do
       end
 
       it "can add images" do
-        scroll_to(0, 500)
         dynamically_attach_file(:proposal_documents, Decidim::Dev.asset("city.jpeg"))
         click_link_or_button "Save"
         click_on "Edit idea"
@@ -86,8 +85,8 @@ describe "User edits proposals" do
 
           click_link_or_button "Edit documents"
           within ".upload-modal" do
-            click_on(".remove-upload-item")
-            click_link_or_button "Save"
+            click_link_or_button("Remove")
+            click_link_or_button "Next"
           end
 
           click_link_or_button "Save"
@@ -115,11 +114,11 @@ describe "User edits proposals" do
 
         it "can remove card image" do
           click_on "Edit idea"
-
-          click_link_or_button "Edit image"
+          scroll_to(0, 500)
+          click_link_or_button "Edit documents"
           within ".upload-modal" do
-            click_on("button.remove-upload-item")
-            click_link_or_button "Save"
+            click_link_or_button("Remove")
+            click_link_or_button "Next"
           end
 
           click_link_or_button "Save"
@@ -137,11 +136,11 @@ describe "User edits proposals" do
           expect(page).to have_css(".flash.success")
           page.execute_script "window.scrollBy(0,10000)"
 
-          expect(page).to have_content("RELATED IMAGES")
+          expect(page).to have_content("Images")
 
           created_proposal = Decidim::Proposals::Proposal.find(proposal.id)
           expect(created_proposal.attachments.count).to eq(1)
-          expect(created_proposal.attachments.select { |p| p.title == { "en" => "city2" } && p.weight == 0 }.count).to eq(1)
+          expect(created_proposal.attachments.select { |p| p.title == { "en" => "city2.jpeg" } && p.weight == 1 }.count).to eq(1)
         end
       end
     end

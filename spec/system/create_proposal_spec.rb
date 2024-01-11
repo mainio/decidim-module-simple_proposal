@@ -73,7 +73,7 @@ describe "User creates proposal simply" do
         select category.name["en"], from: :proposal_category_id
         click_link_or_button "Preview"
         expect(page).to have_css(".form-error")
-        expect(page).to have_content("There's an error in this field")
+        expect(page).to have_content("There is an error in this field")
       end
 
       it "creates a new proposal with a category and scope" do
@@ -120,11 +120,9 @@ describe "User creates proposal simply" do
 
         before do
           click_on "New idea"
-          path = "#{main_component_path(component)}proposals/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
+          path = "#{main_component_path(component)}/#{draft.id}/edit_draft?component_id=#{component.id}&question_slug=#{component.participatory_space.slug}"
           expect(page).to have_current_path(path)
           fill_category_and_scope(category, scope)
-          # Because chrome tries to click outside of viewport
-          scroll_to find(".button--nomargin.large")
         end
 
         it "can finish proposal" do

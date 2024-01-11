@@ -46,6 +46,18 @@ module Decidim
           end
         end
 
+        def document_cleanup!
+          documents = documents_attached_to.attachments.with_attached_file
+
+          documents.each do |document|
+            @form.documents.map(&:id).exclude? document.id
+            document.destroy! if @form.documents.map(&:id).exclude? document.id
+          end
+
+          documents_attached_to.reload
+          documents_attached_to.instance_variable_set(:@documents, nil)
+        end
+
         def first_attachment_weight
           return 1 if proposal.attachments.count.zero?
 

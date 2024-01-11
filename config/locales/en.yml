@@ -366,3 +366,8 @@ en:
           proposals_selected_by_sortition: Ideas selected by sortition
     statistics:
       proposals_accepted: Accepted Ideas
+  layouts:
+    decidim:
+      shared:
+        layout_center:
+          cancel: Cancel

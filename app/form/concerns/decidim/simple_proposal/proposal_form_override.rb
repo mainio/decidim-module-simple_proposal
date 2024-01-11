@@ -28,8 +28,6 @@ module Decidim
           # has to be manually mapped.
           self.scope_id = model.scope.id if model.scope
 
-          # self.has_address = true if model.address.present?
-
           self.documents = model.attachments
         end
 

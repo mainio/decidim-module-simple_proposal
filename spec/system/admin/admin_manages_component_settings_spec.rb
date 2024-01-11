@@ -17,7 +17,7 @@ describe "Admin manages component settings" do
     describe "component settings" do
       before do
         click_on "Components"
-        find(".icon--cog").click
+        find(".action-icon.action-icon--configure").click
       end
 
       it "has scope preselected" do
