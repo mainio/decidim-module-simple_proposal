@@ -2,17 +2,17 @@
 
 require "spec_helper"
 
-describe "Admin merges proposals", type: :system do
+describe "Admin merges proposals" do
   let(:manifest_name) { "proposals" }
   let(:organization) { create(:organization) }
 
-  let(:author) { create(:user, :confirmed, organization: organization) }
-  let(:another_author) { create(:user, :confirmed, organization: organization) }
+  let(:author) { create(:user, :confirmed, organization:) }
+  let(:another_author) { create(:user, :confirmed, organization:) }
 
-  let(:proposal) { create(:proposal, component: component, users: authors) }
+  let(:proposal) { create(:proposal, component:, users: authors) }
   let(:authors) { [author] }
 
-  let(:another_proposal) { create(:proposal, component: component, users: other_authors) }
+  let(:another_proposal) { create(:proposal, component:, users: other_authors) }
   let(:other_authors) { [another_author] }
 
   include_context "when managing a component as an admin"
@@ -27,7 +27,7 @@ describe "Admin merges proposals", type: :system do
       expect(proposal.id).to be < another_proposal.id
       visit current_path
       merge_proposals([proposal, another_proposal])
-      expect(page).to have_css(".callout.success")
+      expect(page).to have_css(".flash.success")
       expect(page).to have_content(translated(proposal.title))
       expect(Decidim::Proposals::Proposal.find(proposal.id).deleted_at).to be_between(10.seconds.ago, Time.current)
       expect(Decidim::Proposals::Proposal.find(another_proposal.id).deleted_at).to be_between(10.seconds.ago, Time.current)
@@ -36,33 +36,33 @@ describe "Admin merges proposals", type: :system do
       expect(merge_proposal.body["en"]).to eq("#{proposal.body["en"]}\n\n#{another_proposal.body["en"]}")
       expect(merge_proposal.authors.count).to eq(3)
       expect(merge_proposal.authors).to include(author, another_author, organization)
-      expect(page).to have_selector(".icon.icon--pencil", count: 1)
-      expect(page).to have_selector("tr[data-id='#{merge_proposal.id}']")
-      expect(page).not_to have_selector("tr[data-id='#{proposal.id}']")
-      expect(page).not_to have_selector("tr[data-id='#{another_proposal.id}']")
+      expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 1)
+      expect(page).to have_css("tr[data-id='#{merge_proposal.id}']")
+      expect(page).to have_no_css("tr[data-id='#{proposal.id}']")
+      expect(page).to have_no_css("tr[data-id='#{another_proposal.id}']")
     end
 
     it "links new proposal to deleted proposals" do
       visit current_path
       merge_proposals([proposal, another_proposal])
-      expect(page).to have_css(".callout.success")
+      expect(page).to have_css(".flash.success")
       linked_proposals = Decidim::Proposals::Proposal.last.linked_resources(:proposals, "copied_from_component")
       expect(linked_proposals.count).to eq(2)
       expect(linked_proposals).to include(proposal, another_proposal)
     end
 
     context "with multiple authors" do
-      let(:author3) { create(:user, :confirmed, organization: organization) }
+      let(:author3) { create(:user, :confirmed, organization:) }
       let(:authors) { [author, another_author] }
       let(:other_authors) { [author3, organization] }
 
       it "merges two proposals into one with all the authors" do
         visit current_path
         merge_proposals([proposal, another_proposal])
-        expect(page).to have_css(".callout.success")
+        expect(page).to have_css(".flash.success")
         expect(Decidim::Proposals::Proposal.where(deleted_at: nil).count).to eq(1)
         expect(Decidim::Proposals::Proposal.last.authors).to include(author, another_author, author3, organization)
-        expect(page).to have_selector(".icon.icon--pencil", count: 1)
+        expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 1)
       end
     end
 
@@ -81,8 +81,8 @@ describe "Admin merges proposals", type: :system do
     end
 
     context "when proposals have machine translations" do
-      let(:proposal) { create(:proposal, body: body1, component: component, users: authors) }
-      let(:another_proposal) { create(:proposal, body: body2, component: component, users: other_authors) }
+      let(:proposal) { create(:proposal, body: body1, component:, users: authors) }
+      let(:another_proposal) { create(:proposal, body: body2, component:, users: other_authors) }
       let(:body1) do
         {
           "en" => "Hello world",
@@ -131,8 +131,8 @@ describe "Admin merges proposals", type: :system do
       find(".js-proposal-id-#{proposal.id}").set(true)
     end
     find("#js-bulk-actions-button").click
-    click_button "Merge into a new one"
+    click_link_or_button "Merge into a new one"
     select translated(component.name), from: "target_component_id_"
-    click_button "Merge"
+    click_link_or_button "Merge"
   end
 end

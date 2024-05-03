@@ -61,12 +61,9 @@ module Decidim
             :user_group_id,
             :category_id,
             :scope_id,
-            :has_address,
             :attachment,
             :body_template,
             :suggested_hashtags,
-            :photos,
-            :add_photos,
             :documents,
             :add_documents
           ).merge(
@@ -76,7 +73,7 @@ module Decidim
             organization: current_organization,
             id: params[:proposal][:user_group_id]
           )
-          @proposal.add_coauthor(current_user, user_group: user_group)
+          @proposal.add_coauthor(current_user, user_group:)
 
           # We could set these when creating proposal, but We want to call update because after that proposal becomes persisted
           # and it adds coauthor correctly.
@@ -111,7 +108,7 @@ module Decidim
 
             on(:invalid) do
               flash.now[:alert] = I18n.t("proposals.update_draft.error", scope: "decidim")
-              fix_form_photos_and_documents
+              fix_form_documents
               render :edit_draft
             end
           end
@@ -131,7 +128,7 @@ module Decidim
 
             on(:invalid) do
               flash.now[:alert] = I18n.t("proposals.update.error", scope: "decidim")
-              fix_form_photos_and_documents
+              fix_form_documents
               render :edit
             end
           end
@@ -146,11 +143,11 @@ module Decidim
         def default_filter_params
           {
             search_text_cont: "",
-            with_any_origin: default_filter_origin_params,
+            with_any_origin: nil,
             activity: "all",
-            with_any_category: default_filter_category_params,
+            with_any_category: nil,
             with_any_state: %w(accepted evaluating state_not_published not_answered rejected),
-            with_any_scope: default_filter_scope_params,
+            with_any_scope: nil,
             related_to: "",
             type: "all"
           }
@@ -163,10 +160,9 @@ module Decidim
           Proposal.only_visible_emendations_for(current_user, current_component).published.include?(@proposal)
         end
 
-        def fix_form_photos_and_documents
+        def fix_form_documents
           return unless @form
 
-          @form.photos = map_attachment_objects(@form.photos)
           @form.documents = map_attachment_objects(@form.documents)
         end
 
@@ -183,11 +179,6 @@ module Decidim
               attachment
             end
           end
-        end
-
-        # TODO: Remove after feature/configurable_order_for_proposals is merged!
-        def default_order
-          "recent"
         end
       end
     end

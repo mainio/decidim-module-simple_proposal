@@ -7,7 +7,7 @@ module Decidim
       included do
         def scopes_picker_field(form, name, root: false, options: { checkboxes_on_top: true })
           options.merge!(selected: selected_scope(form)) if selected_scope(form)
-          form.select(name, simple_scope_options(root: root, options: options), include_blank: t("decidim.scopes.prompt"))
+          form.select(name, simple_scope_options(root:, options:), include_blank: t("decidim.scopes.prompt"))
         end
 
         private

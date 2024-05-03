@@ -13,11 +13,6 @@ module Decidim
             return broadcast(:invalid) if attachments_invalid?
           end
 
-          if process_gallery?
-            build_gallery
-            return broadcast(:invalid) if gallery_invalid?
-          end
-
           transaction do
             if @proposal.draft?
               update_draft
@@ -25,10 +20,8 @@ module Decidim
               update_proposal
             end
 
-            photo_cleanup!
             document_cleanup!
 
-            create_photos if process_gallery?
             create_attachments(first_weight: first_attachment_weight) if @form.add_documents.any?
           end
 
@@ -41,7 +34,7 @@ module Decidim
           weight = first_weight
           # Add the weights first to the old document
           @form.documents.each do |document|
-            document.update!(weight: weight)
+            document.update!(weight:)
             weight += 1
           end
           @documents.map! do |document|
@@ -53,36 +46,22 @@ module Decidim
           end
         end
 
-        def photo_cleanup!
-          proposal.attachments.each do |photo|
-            photo_and_document_ids = form.photos.map(&:id).concat(form.documents.map(&:id))
-            photo.destroy! if photo_and_document_ids.exclude? photo.id
+        def document_cleanup!
+          documents = documents_attached_to.attachments.with_attached_file
+
+          documents.each do |document|
+            @form.documents.map(&:id).exclude? document.id
+            document.destroy! if @form.documents.map(&:id).exclude? document.id
           end
-          # manually reset cached photos
-          gallery_attached_to.reload
-          gallery_attached_to.instance_variable_set(:@photos, nil)
+
+          documents_attached_to.reload
+          documents_attached_to.instance_variable_set(:@documents, nil)
         end
 
         def first_attachment_weight
-          return 1 if proposal.photos.count.zero?
+          return 1 if proposal.attachments.count.zero?
 
-          proposal.photos.count
-        end
-
-        def create_photos
-          proposal.photos.each do |photo|
-            next unless photo.weight.zero?
-
-            photo.weight = 1
-            photo.save!
-          end
-
-          @gallery.map! do |photo|
-            photo.attached_to = proposal
-            photo.weight = 0
-            photo.save!
-            @form.photos << photo
-          end
+          proposal.attachments.count
         end
       end
     end

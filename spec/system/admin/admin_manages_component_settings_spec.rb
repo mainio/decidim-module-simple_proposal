@@ -2,10 +2,10 @@
 
 require "spec_helper"
 
-describe "Admin manages component settings", type: :system do
+describe "Admin manages component settings" do
   let(:manifest_name) { "proposals" }
   let(:organization) { create(:organization) }
-  let(:scope) { create(:scope, organization: organization) }
+  let(:scope) { create(:scope, organization:) }
 
   include_context "when managing a component as an admin"
 
@@ -16,8 +16,8 @@ describe "Admin manages component settings", type: :system do
 
     describe "component settings" do
       before do
-        click_link "Components"
-        find(".icon--cog").click
+        click_on "Components"
+        find(".action-icon.action-icon--configure").click
       end
 
       it "has scope preselected" do
@@ -26,7 +26,7 @@ describe "Admin manages component settings", type: :system do
       end
 
       context "when there's antoher scope" do
-        let!(:scope2) { create(:scope, organization: organization) }
+        let!(:scope2) { create(:scope, organization:) }
 
         before do
           visit current_path
@@ -34,7 +34,7 @@ describe "Admin manages component settings", type: :system do
 
         it "can change scope" do
           select scope2.name["en"], from: "component[settings][scope_id]"
-          click_button "Update"
+          click_link_or_button "Update"
           expect(page).to have_content("The component was updated successfully")
           expect(Decidim::Component.find(component.id).scope.id).to eq(scope2.id)
         end
