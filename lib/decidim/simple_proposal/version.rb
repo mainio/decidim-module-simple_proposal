@@ -3,6 +3,6 @@
 module Decidim
   module SimpleProposal
     VERSION = "0.27.0"
-    DECIDIM_VERSION = "~> 0.27.0"
+    DECIDIM_VERSION = "~> 0.27.6"
   end
 end
