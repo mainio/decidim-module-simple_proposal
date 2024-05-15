@@ -26,17 +26,17 @@ describe "Admin manages component settings" do
       end
 
       context "when there's antoher scope" do
-        let!(:scope2) { create(:scope, organization:) }
+        let!(:second_scope) { create(:scope, organization:) }
 
         before do
           visit current_path
         end
 
         it "can change scope" do
-          select scope2.name["en"], from: "component[settings][scope_id]"
+          select second_scope.name["en"], from: "component[settings][scope_id]"
           click_link_or_button "Update"
           expect(page).to have_content("The component was updated successfully")
-          expect(Decidim::Component.find(component.id).scope.id).to eq(scope2.id)
+          expect(Decidim::Component.find(component.id).scope.id).to eq(second_scope.id)
         end
       end
     end

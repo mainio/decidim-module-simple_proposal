@@ -8,7 +8,7 @@ module Decidim
         extend ActiveSupport::Concern
         included do
           def admin_edition_is_available?
-            return unless proposal
+            return false unless proposal
 
             proposal.official? || proposal.official_meeting? || proposal.authors.any? { |p| p.is_a?(Decidim::Organization) }
           end

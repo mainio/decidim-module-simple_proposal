@@ -52,56 +52,56 @@ describe "Admin merges proposals" do
     end
 
     context "with multiple authors" do
-      let(:author3) { create(:user, :confirmed, organization:) }
+      let(:third_author) { create(:user, :confirmed, organization:) }
       let(:authors) { [author, another_author] }
-      let(:other_authors) { [author3, organization] }
+      let(:other_authors) { [third_author, organization] }
 
       it "merges two proposals into one with all the authors" do
         visit current_path
         merge_proposals([proposal, another_proposal])
         expect(page).to have_css(".flash.success")
         expect(Decidim::Proposals::Proposal.where(deleted_at: nil).count).to eq(1)
-        expect(Decidim::Proposals::Proposal.last.authors).to include(author, another_author, author3, organization)
+        expect(Decidim::Proposals::Proposal.last.authors).to include(author, another_author, third_author, organization)
         expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 1)
       end
     end
 
     context "when proposals has comments" do
       let!(:comment) { create(:comment, commentable: proposal) }
-      let!(:comment2) { create(:comment, commentable: proposal) }
-      let!(:comment3) { create(:comment, commentable: another_proposal) }
+      let!(:second_comment) { create(:comment, commentable: proposal) }
+      let!(:third_comment) { create(:comment, commentable: another_proposal) }
 
       it "moves comments to merge proposal" do
         visit current_path
         merge_proposals([proposal, another_proposal])
         merge_proposal = Decidim::Proposals::Proposal.last
         expect(merge_proposal.comments.count).to eq(3)
-        expect(merge_proposal.comments).to include(comment, comment2, comment3)
+        expect(merge_proposal.comments).to include(comment, second_comment, third_comment)
       end
     end
 
     context "when proposals have machine translations" do
-      let(:proposal) { create(:proposal, body: body1, component:, users: authors) }
-      let(:another_proposal) { create(:proposal, body: body2, component:, users: other_authors) }
-      let(:body1) do
+      let(:proposal) { create(:proposal, body: first_body, component:, users: authors) }
+      let(:another_proposal) { create(:proposal, body: second_body, component:, users: other_authors) }
+      let(:first_body) do
         {
           "en" => "Hello world",
-          "machine_translations" => machine_translations1
+          "machine_translations" => first_machine_translations
         }
       end
-      let(:body2) do
+      let(:second_body) do
         {
           "en" => "This is a test sentence",
-          "machine_translations" => machine_translations2
+          "machine_translations" => second_machine_translations
         }
       end
-      let(:machine_translations1) do
+      let(:first_machine_translations) do
         {
           "fi" => "Hei maailma",
           "sv" => "Hej världen"
         }
       end
-      let(:machine_translations2) do
+      let(:second_machine_translations) do
         {
           "fi" => "Tämä on testilause",
           "sv" => "Det här är en testmening"
@@ -130,7 +130,7 @@ describe "Admin merges proposals" do
     Array(proposals).each do |proposal|
       find(".js-proposal-id-#{proposal.id}").set(true)
     end
-    find("#js-bulk-actions-button").click
+    find_by_id("js-bulk-actions-button").click
     click_link_or_button "Merge into a new one"
     select translated(component.name), from: "target_component_id_"
     click_link_or_button "Merge"

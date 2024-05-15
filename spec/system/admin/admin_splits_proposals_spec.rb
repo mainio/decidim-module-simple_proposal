@@ -81,7 +81,7 @@ describe "Admin splits proposals" do
     Array(proposal_ids).each do |id|
       find(".js-proposal-id-#{id}").set(true)
     end
-    find("#js-bulk-actions-button").click
+    find_by_id("js-bulk-actions-button").click
     click_link_or_button "Split proposals"
     select translated(component.name), from: "target_component_id_"
     click_link_or_button "Split"
