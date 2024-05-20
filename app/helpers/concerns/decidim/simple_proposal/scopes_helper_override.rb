@@ -20,7 +20,13 @@ module Decidim
 
         def simple_scope_options(root: false, options: {})
           scopes_arrray = []
-          roots = root ? root.children : ancestors
+          roots = if !root
+                    ancestors
+                  elsif root.children.empty?
+                    [root]
+                  else
+                    root.children
+                  end
           roots.each do |ancestor|
             children_after_parent(ancestor, scopes_arrray, "")
           end
