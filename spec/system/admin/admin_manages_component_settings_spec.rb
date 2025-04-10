@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin manages component settings" do
+describe "AdminManagesComponentSettings" do
   let(:manifest_name) { "proposals" }
   let(:organization) { create(:organization) }
   let(:scope) { create(:scope, organization:) }
@@ -16,7 +16,10 @@ describe "Admin manages component settings" do
 
     describe "component settings" do
       before do
-        click_on "Components"
+        within "#admin-sidebar-menu-settings" do
+          click_on "Components"
+        end
+
         find(".action-icon.action-icon--configure").click
       end
 

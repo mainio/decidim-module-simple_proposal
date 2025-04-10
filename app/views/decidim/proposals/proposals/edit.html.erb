@@ -1,3 +1,4 @@
-<%= render "form_view", form_params: { submit_text: t(".send") } %>
-
+<%= append_stylesheet_pack_tag "decidim_proposals", media: "all" %>
 <%= append_javascript_pack_tag "decidim_proposals" %>
+
+<%= render "form_view", form_params: { submit_text: t(".send") } %>

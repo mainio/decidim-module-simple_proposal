@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "User edits proposals" do
+describe "UserEditsProposals" do
   include_context "with a component"
   let(:organization) { create(:organization, available_locales: [:en]) }
   let(:participatory_process) { create(:participatory_process, :with_steps, organization:) }
@@ -85,8 +85,8 @@ describe "User edits proposals" do
 
           click_link_or_button "Edit documents"
           within ".upload-modal" do
-            click_link_or_button("Remove")
-            click_link_or_button "Next"
+            click_link_or_button "Remove"
+            click_link_or_button "Save"
           end
 
           click_link_or_button "Save"
@@ -117,8 +117,8 @@ describe "User edits proposals" do
           scroll_to(0, 500)
           click_link_or_button "Edit documents"
           within ".upload-modal" do
-            click_link_or_button("Remove")
-            click_link_or_button "Next"
+            click_link_or_button "Remove"
+            click_link_or_button "Save"
           end
 
           click_link_or_button "Save"

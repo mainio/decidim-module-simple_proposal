@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Deleted proposal" do
+describe "DeletedProposal" do
   let(:organization) { create(:organization, *organization_traits, available_locales: [:en]) }
   let(:participatory_process) { create(:participatory_process, :with_steps, organization:) }
   let(:manifest_name) { "proposals" }
