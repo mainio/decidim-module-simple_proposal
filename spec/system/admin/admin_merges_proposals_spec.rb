@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin merges proposals" do
+describe "AdminMergesProposals" do
   let(:manifest_name) { "proposals" }
   let(:organization) { create(:organization) }
 

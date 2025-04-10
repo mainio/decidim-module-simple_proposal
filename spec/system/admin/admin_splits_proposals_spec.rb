@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Admin splits proposals" do
+describe "AdminSplitsProposals" do
   let(:manifest_name) { "proposals" }
   let(:organization) { create(:organization) }
   let(:author) { create(:user, :confirmed, organization:) }
