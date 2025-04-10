@@ -10,7 +10,7 @@ on:
 env:
   CI: "true"
   CODECOV: "true"
-  NODE_VERSION: 16.9.1
+  NODE_VERSION: 18.20.0
 
 jobs:
   build_app:
