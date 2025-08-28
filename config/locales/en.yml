@@ -257,7 +257,9 @@ en:
             one: "%{count} idea"
             other: "%{count} ideas"
         edit:
-          gallery_legend: "(Optional) Add an image to the idea card"
+          add_documents: Add attachments
+          attachment_legend: "(Optional) Add images or attachments to your idea if you want"
+          edit_documents: Edit attachments
           send: Save
           title: Edit idea
         edit_draft:
