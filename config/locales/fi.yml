@@ -255,7 +255,9 @@ fi:
             one: "%{count} idea"
             other: "%{count} ideaa"
         edit:
-          gallery_legend: "(Valinnainen) Lisää kuva ideakorttiin"
+          add_documents: Lisää liitteitä
+          attachment_legend: "(Valinnainen) Lisää halutessasi kuvia tai liitteitä idealle"
+          edit_documents: Muokkaa liitteitä
           send: Tallenna
           title: Muokkaa ideaa
         edit_draft:
