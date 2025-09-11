@@ -88,7 +88,7 @@ module Decidim
 
             on(:invalid) do
               flash.now[:alert] = I18n.t("proposals.update_draft.error", scope: "decidim")
-              render :new
+              render :edit_draft
             end
           end
         end
