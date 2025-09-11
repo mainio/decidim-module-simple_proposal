@@ -261,7 +261,7 @@ fi:
           send: Tallenna
           title: Muokkaa ideaa
         edit_draft:
-          send: Esikatsele
+          send: Jatka
           title: Muokkaa ideaa
         filters:
           my_proposals: Omat ideat
@@ -272,7 +272,7 @@ fi:
           see_all_withdrawn: Näytä kaikki peruutetut ideat
           view_proposal: Näytä idea
         new:
-          send: Esikatsele
+          send: Jatka
           title: Luo ideasi
         orders:
           label: 'Järjestä ideat:'

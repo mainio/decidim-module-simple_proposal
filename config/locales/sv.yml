@@ -7,9 +7,9 @@ sv:
         edit:
           send: Spara
         edit_draft:
-          send: Förhandsvisning
+          send: Fortsätta
         new:
-          send: Förhandsvisning
+          send: Fortsätta
         show:
           back_to_list: Tillbaka till alla förslag
       collaborative_drafts:

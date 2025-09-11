@@ -263,7 +263,7 @@ en:
           send: Save
           title: Edit idea
         edit_draft:
-          send: Preview
+          send: Continue
           title: Edit Idea Draft
         filters:
           my_proposals: My ideas
@@ -274,7 +274,7 @@ en:
           see_all_withdrawn: See all withdrawn ideas
           view_proposal: View idea
         new:
-          send: Preview
+          send: Continue
           title: Create your idea
         orders:
           label: 'Order ideas by:'
