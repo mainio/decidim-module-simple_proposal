@@ -314,6 +314,8 @@ en:
           vote_limit:
             description: You can support up to %{limit} ideas.
         wizard_aside:
+          back_from_step_1: Back to ideas
+          back_from_step_2: Back to ideas
           info: You are creating an <strong>idea</strong>.
         wizard_steps:
           step_1: Create your idea

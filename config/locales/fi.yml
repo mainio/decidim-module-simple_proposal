@@ -312,6 +312,8 @@ fi:
           vote_limit:
             description: Voit kannattaa enintään %{limit} ideaa.
         wizard_aside:
+          back_from_step_1: Takaisin ideoihin
+          back_from_step_2: Takaisin ideoihin
           info: Olet luomassa <strong>ideaa</strong>.
         wizard_steps:
           step_1: Luo ideasi
