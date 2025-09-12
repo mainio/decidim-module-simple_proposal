@@ -49,7 +49,7 @@ describe "UserCreatesProposalSimply" do
         click_on "New idea"
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
-        click_link_or_button "Preview"
+        click_link_or_button "Continue"
         click_link_or_button "Publish"
         expect(page).to have_content("Idea successfully published.")
         expect(Decidim::Proposals::Proposal.last.title["en"]).to eq(proposal_title)
@@ -71,7 +71,7 @@ describe "UserCreatesProposalSimply" do
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         select category.name["en"], from: :proposal_category_id
-        click_link_or_button "Preview"
+        click_link_or_button "Continue"
         expect(page).to have_css(".form-error")
         expect(page).to have_content("There is an error in this field")
       end
@@ -81,7 +81,7 @@ describe "UserCreatesProposalSimply" do
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         fill_category_and_scope(category, scope)
-        click_link_or_button "Preview"
+        click_link_or_button "Continue"
         click_link_or_button "Publish"
         expect(page).to have_content("Idea successfully published.")
         expect(Decidim::Proposals::Proposal.last.category).to eq(category)
@@ -93,10 +93,10 @@ describe "UserCreatesProposalSimply" do
         fill_in :proposal_title, with: proposal_title
         fill_in :proposal_body, with: proposal_body
         fill_category_and_scope(category, scope)
-        click_link_or_button "Preview"
+        click_link_or_button "Continue"
         click_on "Modify the idea"
         fill_in :proposal_title, with: "This idea is modified"
-        click_link_or_button "Preview"
+        click_link_or_button "Continue"
         expect(page).to have_content("This idea is modified")
         click_link_or_button "Publish"
         expect(page).to have_content("Idea successfully published.")
@@ -109,7 +109,7 @@ describe "UserCreatesProposalSimply" do
           fill_in :proposal_body, with: proposal_body
           fill_category_and_scope(category, scope)
           dynamically_attach_file(:proposal_documents, Decidim::Dev.asset("city.jpeg"))
-          click_link_or_button "Preview"
+          click_link_or_button "Continue"
           click_link_or_button "Publish"
           expect(page).to have_content("Idea successfully published.")
         end
@@ -126,7 +126,7 @@ describe "UserCreatesProposalSimply" do
         end
 
         it "can finish proposal" do
-          click_link_or_button "Preview"
+          click_link_or_button "Continue"
           click_link_or_button "Publish"
           expect(page).to have_content("Idea successfully published.")
         end
@@ -143,7 +143,7 @@ describe "UserCreatesProposalSimply" do
       click_on "New idea"
       fill_in :proposal_title, with: proposal_title
       fill_in :proposal_body, with: proposal_body
-      click_link_or_button "Preview"
+      click_link_or_button "Continue"
       click_link_or_button "Publish"
       expect(page).to have_content("Idea successfully published.")
     end
