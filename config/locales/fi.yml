@@ -255,11 +255,13 @@ fi:
             one: "%{count} idea"
             other: "%{count} ideaa"
         edit:
-          gallery_legend: "(Valinnainen) Lisää kuva ideakorttiin"
+          add_documents: Lisää liitteitä
+          attachment_legend: "(Valinnainen) Lisää halutessasi kuvia tai liitteitä idealle"
+          edit_documents: Muokkaa liitteitä
           send: Tallenna
           title: Muokkaa ideaa
         edit_draft:
-          send: Esikatsele
+          send: Jatka
           title: Muokkaa ideaa
         filters:
           my_proposals: Omat ideat
@@ -273,7 +275,7 @@ fi:
           view_proposal: Näytä idea
           text_banner: Katselet ideoita, jotka on peruttu niiden laatijoiden toimesta. %{go_back_link}.
         new:
-          send: Esikatsele
+          send: Jatka
           title: Luo ideasi
         orders:
           label: 'Järjestä ideat:'
@@ -313,6 +315,8 @@ fi:
           vote_limit:
             description: Voit kannattaa enintään %{limit} ideaa.
         wizard_aside:
+          back_from_step_1: Takaisin ideoihin
+          back_from_step_2: Takaisin ideoihin
           info: Olet luomassa <strong>ideaa</strong>.
         wizard_steps:
           step_1: Luo ideasi

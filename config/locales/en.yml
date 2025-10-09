@@ -257,11 +257,13 @@ en:
             one: "%{count} idea"
             other: "%{count} ideas"
         edit:
-          gallery_legend: "(Optional) Add an image to the idea card"
+          add_documents: Add attachments
+          attachment_legend: "(Optional) Add images or attachments to your idea if you want"
+          edit_documents: Edit attachments
           send: Save
           title: Edit idea
         edit_draft:
-          send: Preview
+          send: Continue
           title: Edit Idea Draft
         filters:
           my_proposals: My ideas
@@ -272,7 +274,7 @@ en:
           see_all_withdrawn: See all withdrawn ideas
           view_proposal: View idea
         new:
-          send: Preview
+          send: Continue
           title: Create your idea
         orders:
           label: 'Order ideas by:'
@@ -312,6 +314,8 @@ en:
           vote_limit:
             description: You can support up to %{limit} ideas.
         wizard_aside:
+          back_from_step_1: Back to ideas
+          back_from_step_2: Back to ideas
           info: You are creating an <strong>idea</strong>.
         wizard_steps:
           step_1: Create your idea

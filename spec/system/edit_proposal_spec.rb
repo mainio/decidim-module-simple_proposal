@@ -83,7 +83,7 @@ describe "UserEditsProposals" do
         it "can remove document attachment" do
           click_on "Edit idea"
 
-          click_link_or_button "Edit documents"
+          click_link_or_button "Edit attachments"
           within ".upload-modal" do
             click_link_or_button "Remove"
             click_link_or_button "Save"
@@ -91,7 +91,7 @@ describe "UserEditsProposals" do
 
           click_link_or_button "Save"
           expect(page).to have_css(".flash.success")
-          expect(page).to have_no_content("Related documents")
+          expect(page).to have_no_content("Documents")
           expect(page).to have_no_link(filename)
           expect(Decidim::Proposals::Proposal.find(proposal.id).attachments).to be_empty
         end
@@ -115,7 +115,7 @@ describe "UserEditsProposals" do
         it "can remove card image" do
           click_on "Edit idea"
           scroll_to(0, 500)
-          click_link_or_button "Edit documents"
+          click_link_or_button "Edit attachments"
           within ".upload-modal" do
             click_link_or_button "Remove"
             click_link_or_button "Save"
@@ -123,7 +123,7 @@ describe "UserEditsProposals" do
 
           click_link_or_button "Save"
           expect(page).to have_css(".flash.success")
-          expect(page).to have_no_content("RELATED IMAGES")
+          expect(page).to have_no_content("Images")
           expect(page).to have_no_link(filename)
           expect(Decidim::Proposals::Proposal.find(proposal.id).attachments).to be_empty
         end
