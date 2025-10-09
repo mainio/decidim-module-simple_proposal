@@ -266,9 +266,12 @@ fi:
         form_view:
           cancel: Peruuta
         index:
+          click_here: Näytä kaikki ideat
           new_proposal: Uusi idea
+          see_all: Näytä kaikki ideat
           see_all_withdrawn: Näytä kaikki peruutetut ideat
           view_proposal: Näytä idea
+          text_banner: Katselet ideoita, jotka on peruttu niiden laatijoiden toimesta. %{go_back_link}.
         new:
           send: Esikatsele
           title: Luo ideasi
