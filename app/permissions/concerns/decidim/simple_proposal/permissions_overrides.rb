@@ -11,7 +11,7 @@ module Decidim
         end
 
         def author?
-          proposal.authored_by?(user) || proposal.authors.one? && proposal.authors.first.is_a?(Decidim::Organization) && user.admin?
+          proposal.authored_by?(user) || (proposal.authors.one? && proposal.authors.first.is_a?(Decidim::Organization) && user.admin?)
         end
       end
     end

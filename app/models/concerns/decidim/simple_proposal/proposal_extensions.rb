@@ -10,7 +10,7 @@ module Decidim
         end
 
         def author?(user)
-          authored_by?(user) || authors.one? && authors.first.is_a?(Decidim::Organization) && user.admin?
+          authored_by?(user) || (authors.one? && authors.first.is_a?(Decidim::Organization) && user.admin?)
         end
       end
     end
