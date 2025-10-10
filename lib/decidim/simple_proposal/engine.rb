@@ -36,13 +36,14 @@ module Decidim
           Decidim::ScopesHelper.include Decidim::SimpleProposal::ScopesHelperOverride
 
           Decidim::Proposals::Admin::ProposalsController.include Decidim::SimpleProposal::Admin::ProposalsControllerOverride
+          Decidim::Proposals::Proposal.include Decidim::SimpleProposal::ProposalExtensions
 
           # Allow admins to split & merge proposals more freely
           Decidim::Proposals::Admin::ProposalsForkForm.include Decidim::SimpleProposal::Admin::ProposalForkFormOverride
           Decidim::Proposals::Admin::SplitProposals.include Decidim::SimpleProposal::Admin::SplitProposalsOverride
           Decidim::Proposals::Admin::MergeProposals.include Decidim::SimpleProposal::Admin::MergeProposalsOverride
           Decidim::Proposals::Admin::Permissions.include Decidim::SimpleProposal::Admin::PermissionOverrides
-
+          Decidim::Proposals::Permissions.include(Decidim::SimpleProposal::PermissionsOverrides)
           # Fix attachments (images as documents), should not be needed after #8681
           Decidim::Proposals::UpdateProposal.include Decidim::SimpleProposal::UpdateProposalOverride
         end
