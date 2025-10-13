@@ -804,7 +804,6 @@ DEPENDENCIES
   faker (~> 3.2.2)
   letter_opener_web (~> 2.0)
   listen (~> 3.8)
-  nokogiri (= 1.16.8)
   puma (>= 6.4.2)
   rubocop (~> 1.28)
   rubocop-faker
