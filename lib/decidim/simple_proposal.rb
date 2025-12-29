@@ -10,9 +10,5 @@ module Decidim
     config_accessor :require_scope do
       true
     end
-
-    config_accessor :require_category do
-      true
-    end
   end
 end

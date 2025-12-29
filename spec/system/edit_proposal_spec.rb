@@ -11,16 +11,16 @@ describe "UserEditsProposals" do
   let!(:component) do
     create(:proposal_component,
            :with_creation_enabled,
-           :with_attachments_allowed,
            manifest:,
-           participatory_space: participatory_process)
+           participatory_space: participatory_process,
+           settings: { mandatory_category: false, attachments_allowed: true })
   end
 
   let(:proposal_title) { Faker::Lorem.paragraph }
   let(:proposal_body) { Faker::Lorem.paragraph }
 
   before do
-    allow(Decidim::SimpleProposal).to receive_messages(require_category: false, require_scope: false)
+    allow(Decidim::SimpleProposal).to receive_messages(require_scope: false)
   end
 
   context "when user has proposal" do
@@ -167,6 +167,34 @@ describe "UserEditsProposals" do
         page.execute_script "window.scrollBy(0,10000)"
         expect(page).to have_css(".attachment-details[data-filename='#{filename}']")
         expect(page).to have_css(".attachment-details[data-filename='#{filename2}']")
+      end
+    end
+
+    context "when proposals have mandatory categories" do
+      let!(:component) do
+        create(:proposal_component,
+               :with_creation_enabled,
+               manifest:,
+               participatory_space: participatory_process,
+               settings: { mandatory_category: true })
+      end
+      let!(:proposal) { create(:proposal, users: [user], component:) }
+
+      before do
+        login_as user, scope: :user
+        visit_component
+        click_on translated(proposal.title)
+        click_on "Edit idea"
+      end
+
+      it "validates the category field" do
+        fill_in :proposal_body, with: proposal_body
+        expect(page).to have_content("Category")
+        click_link_or_button "Save"
+        expect(page).to have_css(".form-error", text: "There is an error in this field.")
+        select translated_attribute(component.categories.first.name), from: "Category"
+        click_link_or_button "Save"
+        expect(page).to have_css(".flash.success")
       end
     end
   end

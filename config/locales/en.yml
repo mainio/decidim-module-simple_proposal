@@ -53,6 +53,10 @@ en:
       component_order_selector:
         order:
           proposal: Idea
+      proposals:
+        settings:
+          global:
+            mandatory_category: Mandatory category
     devise:
       registrations:
         new:

@@ -36,7 +36,8 @@ describe "UserCreatesProposalSimply" do
 
   context "when category and scope are required" do
     before do
-      allow(Decidim::SimpleProposal).to receive_messages(require_category: true, require_scope: true)
+      component.update(settings: { mandatory_category: true })
+      allow(Decidim::SimpleProposal).to receive_messages(require_scope: true)
     end
 
     context "without any scopes or categories" do
@@ -59,7 +60,7 @@ describe "UserCreatesProposalSimply" do
 
     context "when scopes are enabled and there is subscope and category" do
       before do
-        component.update(settings: { scopes_enabled: true, scope_id: parent_scope.id, attachments_allowed: true })
+        component.update(settings: { scopes_enabled: true, scope_id: parent_scope.id, attachments_allowed: true, mandatory_category: true })
       end
 
       let(:parent_scope) { create(:scope, organization:) }
@@ -136,7 +137,8 @@ describe "UserCreatesProposalSimply" do
 
   context "when category and scope arent required" do
     before do
-      allow(Decidim::SimpleProposal).to receive_messages(require_category: false, require_scope: false)
+      component.update(settings: { mandatory_category: false })
+      allow(Decidim::SimpleProposal).to receive_messages(require_scope: false)
     end
 
     it "creates a new proposal without category and scope" do

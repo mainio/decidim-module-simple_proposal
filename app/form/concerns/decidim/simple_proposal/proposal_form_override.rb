@@ -40,7 +40,7 @@ module Decidim
         end
 
         def require_category?
-          Decidim::SimpleProposal.require_category && categories_enabled?
+          current_component.settings.mandatory_category && categories_enabled?
         end
 
         def require_scope?

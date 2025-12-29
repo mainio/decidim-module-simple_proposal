@@ -28,6 +28,15 @@ module Decidim
         end
       end
 
+      initializer "decidim_simple_proposal.add_global_component_settings" do
+        config.to_prepare do
+          manifest = Decidim.find_component_manifest("proposals")
+          manifest.settings(:global) do |settings|
+            settings.attribute :mandatory_category, type: :boolean, default: true
+          end
+        end
+      end
+
       initializer "decidim_proposals.overrides" do |app|
         app.config.to_prepare do
           Decidim::Proposals::ProposalsController.include Decidim::SimpleProposal::ProposalsControllerOverride
