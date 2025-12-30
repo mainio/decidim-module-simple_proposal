@@ -58,14 +58,7 @@ module Decidim
           @form = form(Decidim::Proposals::ProposalForm).from_params(proposal_creation_params)
 
           @proposal = Decidim::Proposals::Proposal.new(@form.attributes.except(
-            :user_group_id,
-            :category_id,
-            :scope_id,
-            :attachment,
-            :body_template,
-            :suggested_hashtags,
-            :documents,
-            :add_documents
+            *excluded_proposal_attributes
           ).merge(
             component: current_component
           ))
@@ -135,6 +128,23 @@ module Decidim
         end
 
         private
+
+        def excluded_proposal_attributes
+          attributes = [
+            :user_group_id,
+            :category_id,
+            :scope_id,
+            :attachment,
+            :body_template,
+            :suggested_hashtags,
+            :documents,
+            :add_documents
+          ]
+
+          attributes << :taggings if Decidim.module_installed?(:tags)
+
+          attributes
+        end
 
         def form_proposal_params
           form(Decidim::Proposals::ProposalForm).from_params(params)
