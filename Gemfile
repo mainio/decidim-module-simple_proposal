@@ -16,6 +16,10 @@ gem "decidim-simple_proposal", path: "."
 
 gem "bootsnap", "~> 1.17"
 
+# This is a temporary fix for: https://github.com/rails/rails/issues/54263
+# Without this downgrade Activesupport will give error for missing Logger
+gem "concurrent-ruby", "1.3.4"
+
 gem "puma", ">= 6.4.2"
 
 gem "nokogiri", "1.16.8"
