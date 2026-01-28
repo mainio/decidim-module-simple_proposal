@@ -18,6 +18,8 @@ gem "bootsnap", "~> 1.17"
 
 gem "puma", ">= 6.4.2"
 
+gem "nokogiri", "1.16.8"
+
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
   gem "decidim-dev", DECIDIM_VERSION
