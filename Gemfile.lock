@@ -631,7 +631,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.4.4)
+    rexml (3.4.1)
     rspec (3.13.2)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -811,6 +811,7 @@ DEPENDENCIES
   listen (~> 3.8)
   nokogiri (= 1.16.8)
   puma (>= 6.4.2)
+  rexml (= 3.4.1)
   rubocop (~> 1.28)
   rubocop-faker
   rubocop-rspec (= 2.20)
