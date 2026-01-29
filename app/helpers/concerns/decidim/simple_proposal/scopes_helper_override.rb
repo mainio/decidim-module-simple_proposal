@@ -36,10 +36,6 @@ module Decidim
           options_for_select(scopes_array, selected)
         end
 
-        def ancestors
-          @ancestors ||= Decidim::Scope.where(parent_id: nil)
-        end
-
         def children_after_parent(ancestor, array, prefix)
           array << ["#{prefix.empty? ? "" : "#{prefix} "}#{translated_attribute(ancestor.name)}", ancestor.id]
           ancestor.children.each do |child|
