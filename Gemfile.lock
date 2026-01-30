@@ -820,8 +820,6 @@ DEPENDENCIES
   listen (~> 3.8)
   puma (>= 6.4.2)
   rexml (= 3.4.1)
-  spring (~> 4.1.3)
-  spring-watcher-listen (~> 2.1)
   web-console (~> 4.2)
 
 RUBY VERSION
