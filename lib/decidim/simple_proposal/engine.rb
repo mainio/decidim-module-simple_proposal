@@ -45,6 +45,7 @@ module Decidim
 
           Decidim::Proposals::Admin::ProposalsController.include Decidim::SimpleProposal::Admin::ProposalsControllerOverride
           Decidim::Proposals::Proposal.include Decidim::SimpleProposal::ProposalExtensions
+          Decidim::Proposals::DiffRenderer.include(Decidim::SimpleProposal::DiffRendererExtensions)
 
           # Allow admins to split & merge proposals more freely
           Decidim::Proposals::Admin::ProposalsForkForm.include Decidim::SimpleProposal::Admin::ProposalForkFormOverride
