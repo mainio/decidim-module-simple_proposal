@@ -56,6 +56,7 @@ module Decidim
           enforce_permission_to :create, :proposal
           @step = Decidim::Proposals::ProposalsController::STEP1
           @form = form(Decidim::Proposals::ProposalForm).from_params(proposal_creation_params)
+          attachments = params.require(:proposal)[:add_documents]
 
           category_id = params[:proposal][:category_id]
           scope_id = params[:proposal][:scope_id]
@@ -64,6 +65,19 @@ module Decidim
             on(:ok) do |proposal|
               proposal.category = Category.find(category_id) if category_id.present?
               proposal.scope = Scope.find(scope_id) if scope_id.present?
+
+              if attachments
+                attachments.each_pair do |_key, file_params|
+                  blob = ActiveStorage::Blob.find_signed(file_params[:file])
+
+                  proposal.attachments.create!(
+                    title: { I18n.locale => file_params[:title] },
+                    file: file_params[:file],
+                    content_type: blob.content_type
+                  )
+                end
+              end
+
               proposal.save!
 
               flash[:notice] = I18n.t("proposals.create.success", scope: "decidim")
