@@ -18,7 +18,7 @@ module Decidim
             address: :string,
             latitude: :string,
             longitude: :string,
-            state: :string,
+            decidim_proposals_proposal_state_id: :state,
             answer: :i18n
           }
         end
