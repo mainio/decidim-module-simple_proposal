@@ -41,8 +41,8 @@ module Decidim
             next "" if value.nil?
 
             if value.is_a?(Hash)
-              value.select { |_, text| text.present? }
-                   .transform_values { |text| ActionView::Base.full_sanitizer.sanitize(text).strip }
+              value.transform_values { |text| ActionView::Base.full_sanitizer.sanitize(text).strip }
+                   .compact_blank
             else
               value.to_s
             end
