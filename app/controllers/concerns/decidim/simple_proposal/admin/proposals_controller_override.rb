@@ -8,7 +8,7 @@ module Decidim
 
         included do
           def collection
-            @collection ||= ::Decidim::Proposals::Proposal.where(component: current_component, deleted_at: nil).not_hidden.published
+            @collection ||= ::Decidim::Proposals::Proposal.where(component: current_component, merged_at: nil).not_hidden.published
           end
         end
       end

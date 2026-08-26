@@ -29,10 +29,10 @@ describe "AdminMergesProposals" do
       merge_proposals([proposal, another_proposal])
       expect(page).to have_css(".flash.success")
       expect(page).to have_content(translated(proposal.title))
-      expect(Decidim::Proposals::Proposal.find(proposal.id).deleted_at).to be_between(10.seconds.ago, Time.current)
-      expect(Decidim::Proposals::Proposal.find(another_proposal.id).deleted_at).to be_between(10.seconds.ago, Time.current)
+      expect(Decidim::Proposals::Proposal.find(proposal.id).merged_at).to be_between(10.seconds.ago, Time.current)
+      expect(Decidim::Proposals::Proposal.find(another_proposal.id).merged_at).to be_between(10.seconds.ago, Time.current)
       merge_proposal = Decidim::Proposals::Proposal.last
-      expect(merge_proposal.deleted_at).to be_nil
+      expect(merge_proposal.merged_at).to be_nil
       expect(merge_proposal.body["en"]).to eq("#{proposal.body["en"]}\n\n#{another_proposal.body["en"]}")
       expect(merge_proposal.authors.count).to eq(3)
       expect(merge_proposal.authors).to include(author, another_author, organization)
@@ -46,7 +46,7 @@ describe "AdminMergesProposals" do
       visit current_path
       merge_proposals([proposal, another_proposal])
       expect(page).to have_css(".flash.success")
-      linked_proposals = Decidim::Proposals::Proposal.last.linked_resources(:proposals, "copied_from_component")
+      linked_proposals = Decidim::Proposals::Proposal.unscoped.last.linked_resources(:proposals, "copied_from_component")
       expect(linked_proposals.count).to eq(2)
       expect(linked_proposals).to include(proposal, another_proposal)
     end
@@ -60,7 +60,7 @@ describe "AdminMergesProposals" do
         visit current_path
         merge_proposals([proposal, another_proposal])
         expect(page).to have_css(".flash.success")
-        expect(Decidim::Proposals::Proposal.where(deleted_at: nil).count).to eq(1)
+        expect(Decidim::Proposals::Proposal.where(merged_at: nil).count).to eq(1)
         expect(Decidim::Proposals::Proposal.last.authors).to include(author, another_author, third_author, organization)
         expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 1)
       end
