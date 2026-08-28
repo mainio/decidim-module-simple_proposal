@@ -5,6 +5,65 @@
 
 ** THIS MODULE OVERRIDES CORE FUNCTIONALITY OF DECIDIM-PROPOSALS AND CAN CAUSE UNEXPECTED SIDE EFFECTS! DO NOT USE IF YOU DONT KNOW FOR SURE WHAT YOU ARE DOING! **
 
+** SINCE 0.30 THERE ARE NEW CHANGES TO DATABASE ATTRIBUTES **
+
+Decidim 0.30 adds its own "deleted_at" -attribute that was used in this module as an indicator
+attribute for when proposals were merged. Instead of deleting the merged proposals we added this attribute.(*You can read this down below in **0.25** chapter*)
+
+For this reason a new attribute is added called 'merged_at' which replaces the
+legacy version of 'deleted_at' and let's decidim use the version 0.30 'deleted_at'
+the way it was intended.
+
+A rake task *transfer_deleted_at_to_merged_at* was added to this module which will
+transfer the deleted_at -values to the new merged_at -attribute and nillify deleted_at
+columns that had values in them.
+
+**CAUTION**
+
+----------------------
+
+You need to run another rake task before running migrations called *skip_decidim_deleted_at_migration*. This will mark decidim 0.30's upcoming "AddDeletedAtToDecidimProposalsProposal" as processed so it skips migrating it. If you don't run this rake task your migrations will fail because decidim will try to add
+a deleted_at column to a table that already exists.
+
+If you install decidim's migrations first and you get the error you can still run this task and it will skip the migration, just remember to always install simple_proposals migrations too -> "merged_at" and run the rake task above to transfer the deleted_at data to the correct column.
+
+----------------------
+
+If your decidim instance is already 0.30 or newer when you install this module
+you can just install this module's migration for "merged_at" and forget about the
+rake task since this version (0.30) removes the "deleted_at" migration from this module.
+
+** Step by Step **
+
+If you just updated versions to 0.30 and didn't yet install/run migrations:
+
+1. run bin/rails decidim_simple_proposal:install:migrations (Install merged_at)
+2. run bin/rails decidim_simple_proposal:transfer_deleted_at_to_merged_at
+   (Transfer merge data)
+3. run bin/rails decidim:upgrade (Install decidim migrations)
+4. run bin/rails decidim_simple_proposal:skip_decidim_deleted_at_migration
+   (Skip decidim migration for deleted_at)
+5. run bin/rails db:migrate
+
+If you already installed decidim 0.30's migrations:
+
+1. run bin/rails decidim_simple_proposal:skip_decidim_deleted_at_migration
+   (Skip decidim migration for deleted_at)
+2. run bin/rails decidim_simple_proposal:install:migrations (Install merged_at)
+3. run bin/rails decidim_simple_proposal:transfer_deleted_at_to_merged_at
+   (Transfer merge data)
+4. run bin/rails db:migrate
+
+This can be done even after if you get an error for trying to run the decidim migrations
+without running the rake tasks.
+
+If you are installing this module to an instance that has no history with it and is
+Decidim version 0.30+:
+
+1. run bin/rails decidim_simple_proposal:install:migrations (Install merged_at)
+2. run bin/rails db:migrate
+
+****
 
 ** SINCE 0.25 THERE ARE NEW CHANGES AND FEATURES **
 
@@ -18,6 +77,8 @@ Rejected -> Does not proceed to voting
 ```
 
 A [Decidim](https://github.com/decidim/decidim) module that provides a simplified proposal creation.
+
+****
 
 ## Installation
 
