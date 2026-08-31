@@ -5,19 +5,43 @@ module Decidim
     module Admin
       module MergeProposalsOverride
         extend ActiveSupport::Concern
+
         included do
+          def call
+            form.valid?
+            return broadcast(:invalid) unless form.valid?
+
+            if process_attachments?
+              build_attachments
+              return broadcast(:invalid) if attachments_invalid?
+            end
+
+            transaction do
+              merged_proposals
+            end
+            broadcast(:ok, @merge_proposal)
+          end
+
           private
 
-          def merge_proposals
-            transaction do
-              merged_proposal = create_new_proposal
-              link_proposals = (proposals_to_link + form.proposals).uniq
-              merged_proposal.link_resources(link_proposals, "copied_from_component")
-              form.proposals.each do |proposal|
-                proposal.update(merged_at: Time.current)
-              end
-              merged_proposal
+          def merged_proposals
+            @merged_proposal = create_new_proposal
+
+            link_proposals = (proposals_to_link + form.proposals).uniq
+
+            @merged_proposal.link_resources(link_proposals, "copied_from_component")
+
+            form.proposals.each do |proposal|
+              proposal.update(merged_at: Time.current)
             end
+
+            move_comments_to_merged_proposal
+
+            @attached_to = @merged_proposal
+
+            create_attachments(first_weight: first_attachment_weight) if process_attachments?
+            link_author_meeting if form.created_in_meeting?
+            notify_author
           end
 
           def create_new_proposal
@@ -28,60 +52,44 @@ module Decidim
               author: nil,
               action_user: form.current_user,
               extra_attributes: {
-                component: form.target_component
-              }
+                component: form.target_component,
+                title: form.title,
+                body: form.body.compact_blank.merge("machine_translations" => merged_machine_translations)
+              },
+              skip_link: true
             )
 
-            proposal = simply_merge_proposals(proposal)
-
-            proposal.add_coauthor(original_proposal.organization) unless proposal.authors.include?(original_proposal.organization)
+            merge_authors(proposal, original_proposal)
             proposal
           end
 
-          def simply_merge_proposals(proposal)
-            replace_body = {}
+          def merge_authors(proposal, original_proposal)
             form.proposals.sort_by(&:id).each do |form_proposal|
               form_proposal.authors.each do |author|
                 proposal.add_coauthor(author) unless proposal.authors.include?(author)
               end
+            end
 
-              replace_body = simply_merge_bodies(form_proposal, replace_body)
+            proposal.add_coauthor(original_proposal.organization) unless proposal.authors.include?(original_proposal.organization)
+          end
 
+          def move_comments_to_merged_proposal
+            form.proposals.each do |form_proposal|
               form_proposal.comments.each do |comment|
-                comment.update(commentable: proposal)
-                comment.update(root_commentable: proposal)
+                comment.update(commentable: @merged_proposal)
+                comment.update(root_commentable: @merged_proposal)
               end
             end
-
-            proposal.body = replace_body
-            proposal.save(validate: false)
-            proposal
           end
 
-          def simply_merge_bodies(form_proposal, replace_body)
-            form_proposal.body.keys.each do |key|
-              if key == "machine_translations"
-                replace_body = simply_merge_machine_translations(form_proposal, key, replace_body)
-              elsif form_proposal.body[key].is_a?(String)
-                replace_body[key] = "" unless replace_body.has_key?(key)
-                replace_body[key] += "\n\n" if replace_body[key].present?
-                replace_body[key] += form_proposal.body[key]
+          def merged_machine_translations
+            merged = {}
+            form.proposals.sort_by(&:id).each do |form_proposal|
+              (form_proposal.body["machine_translations"] || {}).each do |locale, translation|
+                merged[locale] = merged[locale].present? ? "#{merged[locale]}\n\n#{translation}" : translation
               end
             end
-            replace_body
-          end
-
-          def simply_merge_machine_translations(form_proposal, key, replace_body)
-            form_proposal.body[key].each do |k|
-              replace_body[key] = {} if replace_body[key].nil?
-              language = k[0]
-              translation = k[1]
-              replace_body[key][language] = "" unless replace_body[key].has_key?(language)
-              replace_body[key][language] += "\n\n" if replace_body[key][language].present?
-              replace_body[key][language] += translation
-            end
-
-            replace_body
+            merged
           end
         end
       end

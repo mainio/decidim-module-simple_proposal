@@ -28,7 +28,8 @@ describe "AdminSplitsProposals" do
         expect(Decidim::Proposals::Proposal.find(proposal.id + 1).authors).to include(author)
         expect(Decidim::Proposals::Proposal.find(proposal.id + 1).authors).to include(another_author)
         expect(Decidim::Proposals::Proposal.find(proposal.id + 1).authors).to include(organization)
-        expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 2)
+        # We need to check invisible links since "Edit idea" lives behind an action button
+        expect(page).to have_link("Edit idea", count: 2, visible: :all)
       end
     end
 
@@ -56,7 +57,7 @@ describe "AdminSplitsProposals" do
         new_proposal2 = new_proposals.select { |p| p.title == another_proposal.title }.first
         expect(new_proposal1.authors).to eq(authors + [organization])
         expect(new_proposal2.authors).to eq([author3, organization])
-        expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 4)
+        expect(page).to have_css(".table-list tbody tr", count: 4)
       end
     end
 
@@ -72,7 +73,7 @@ describe "AdminSplitsProposals" do
         expect(Decidim::Proposals::Proposal.count).to eq(2)
         expect(Decidim::Proposals::Proposal.find(proposal.id).votes.count).to eq(5)
         expect(Decidim::Proposals::Proposal.last.votes.count).to eq(0)
-        expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 2)
+        expect(page).to have_css(".table-list tbody tr", count: 2)
       end
     end
   end

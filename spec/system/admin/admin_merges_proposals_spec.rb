@@ -36,7 +36,7 @@ describe "AdminMergesProposals" do
       expect(merge_proposal.body["en"]).to eq("#{proposal.body["en"]}\n\n#{another_proposal.body["en"]}")
       expect(merge_proposal.authors.count).to eq(3)
       expect(merge_proposal.authors).to include(author, another_author, organization)
-      expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 1)
+      expect(page).to have_css(".table-list tbody tr", count: 1)
       expect(page).to have_css("tr[data-id='#{merge_proposal.id}']")
       expect(page).to have_no_css("tr[data-id='#{proposal.id}']")
       expect(page).to have_no_css("tr[data-id='#{another_proposal.id}']")
@@ -45,7 +45,6 @@ describe "AdminMergesProposals" do
     it "links new proposal to deleted proposals" do
       visit current_path
       merge_proposals([proposal, another_proposal])
-      expect(page).to have_css(".flash.success")
       linked_proposals = Decidim::Proposals::Proposal.unscoped.last.linked_resources(:proposals, "copied_from_component")
       expect(linked_proposals.count).to eq(2)
       expect(linked_proposals).to include(proposal, another_proposal)
@@ -59,10 +58,9 @@ describe "AdminMergesProposals" do
       it "merges two proposals into one with all the authors" do
         visit current_path
         merge_proposals([proposal, another_proposal])
-        expect(page).to have_css(".flash.success")
         expect(Decidim::Proposals::Proposal.where(merged_at: nil).count).to eq(1)
         expect(Decidim::Proposals::Proposal.last.authors).to include(author, another_author, third_author, organization)
-        expect(page).to have_css(".action-icon.action-icon--edit-proposal", count: 1)
+        expect(page).to have_css(".table-list tbody tr", count: 1)
       end
     end
 
@@ -124,15 +122,56 @@ describe "AdminMergesProposals" do
         )
       end
     end
+
+    context "when admin changes title" do
+      it "creates the proposal with merged proposals' bodies and admin's title" do
+        visit current_path
+        merge_proposals([proposal, another_proposal], title: true)
+        expect(page).to have_css(".flash.success")
+
+        merge_proposal = Decidim::Proposals::Proposal.last
+
+        expect(merge_proposal.body["en"]).to eq("#{proposal.body["en"]}\n\n#{another_proposal.body["en"]}")
+        expect(merge_proposal.title["en"]).to eq("This is a test proposal title")
+        expect(page).to have_css(".table-list tbody tr", count: 1)
+        expect(page).to have_css("tr[data-id='#{merge_proposal.id}']")
+      end
+    end
+
+    context "when admin changes body" do
+      it "creates the proposal with merged proposals' titles and admin's body" do
+        visit current_path
+        merge_proposals([proposal, another_proposal], body: true)
+        expect(page).to have_css(".flash.success")
+
+        merge_proposal = Decidim::Proposals::Proposal.last
+
+        expect(merge_proposal.title["en"]).to eq("#{proposal.title["en"]} #{another_proposal.title["en"]}")
+        expect(merge_proposal.body["en"]).to eq("This is a test proposal body")
+        expect(page).to have_css(".table-list tbody tr", count: 1)
+        expect(page).to have_css("tr[data-id='#{merge_proposal.id}']")
+      end
+    end
   end
 
-  def merge_proposals(proposals)
+  def merge_proposals(proposals, title: false, body: false)
     Array(proposals).each do |proposal|
       find(".js-proposal-id-#{proposal.id}").set(true)
     end
+
     find_by_id("js-bulk-actions-button").click
     click_link_or_button "Merge into a new one"
     select translated(component.name), from: "target_component_id_"
-    click_link_or_button "Merge"
+    fill_in "proposals_merge_title_en", with: "This is a test proposal title" if title == true
+
+    if body == true
+      page.execute_script(
+        "document.querySelector('input[name=\"proposals_merge[body_en]\"]').value = arguments[0]",
+        "This is a test proposal body"
+      )
+    end
+
+    click_link_or_button "Create"
+    expect(page).to have_css(".flash.success")
   end
 end
