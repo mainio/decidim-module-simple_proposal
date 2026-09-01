@@ -5,10 +5,6 @@ require_relative "simple_proposal/engine"
 
 module Decidim
   module SimpleProposal
-    include ActiveSupport::Configurable
-
-    config_accessor :require_scope do
-      true
-    end
+    mattr_accessor :require_scope, default: true
   end
 end

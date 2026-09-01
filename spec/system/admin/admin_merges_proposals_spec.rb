@@ -9,10 +9,10 @@ describe "AdminMergesProposals" do
   let(:author) { create(:user, :confirmed, organization:) }
   let(:another_author) { create(:user, :confirmed, organization:) }
 
-  let(:proposal) { create(:proposal, component:, users: authors) }
+  let(:proposal) { create(:proposal, title: { en: "Proposal title" }, component:, users: authors) }
   let(:authors) { [author] }
 
-  let(:another_proposal) { create(:proposal, component:, users: other_authors) }
+  let(:another_proposal) { create(:proposal, title: { en: "Another proposal title" }, component:, users: other_authors) }
   let(:other_authors) { [another_author] }
 
   include_context "when managing a component as an admin"
