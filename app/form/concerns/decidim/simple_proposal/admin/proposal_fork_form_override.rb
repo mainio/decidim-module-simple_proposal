@@ -6,6 +6,7 @@ module Decidim
       # Allow admin to split proposals even it has votes or it's not official.
       module ProposalForkFormOverride
         extend ActiveSupport::Concern
+
         included do
           def mergeable_to_same_component
             true

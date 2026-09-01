@@ -5,6 +5,7 @@ module Decidim
     module Admin
       module SplitProposalsOverride
         extend ActiveSupport::Concern
+
         included do
           private
 
