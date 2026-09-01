@@ -12,6 +12,7 @@ require_relative "#{base_path}lib/decidim/simple_proposal/version"
 DECIDIM_VERSION = Decidim::SimpleProposal::DECIDIM_VERSION
 
 gem "decidim", DECIDIM_VERSION
+gem "decidim-initiatives", DECIDIM_VERSION
 gem "decidim-simple_proposal", path: "."
 
 gem "bootsnap", "~> 1.17"
