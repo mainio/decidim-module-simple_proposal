@@ -37,22 +37,22 @@ rake task since this version (0.30) removes the "deleted_at" migration from this
 
 If you just updated versions to 0.30 and didn't yet install/run migrations:
 
-1. run bin/rails decidim_simple_proposal:install:migrations (Install merged_at)
-2. run bin/rails decidim_simple_proposal:transfer_deleted_at_to_merged_at
-   (Transfer merge data)
-3. run bin/rails decidim:upgrade (Install decidim migrations)
-4. run bin/rails decidim_simple_proposal:skip_decidim_deleted_at_migration
+1. run **bin/rails decidim:upgrade** (Install decidim migrations)
+2. run **bin/rails decidim_simple_proposal:install:migrations** (Install merged_at)
+3. run **bin/rails decidim_simple_proposal:skip_decidim_deleted_at_migration**
    (Skip decidim migration for deleted_at)
-5. run bin/rails db:migrate
+4. run **bin/rails db:migrate**
+5. run **bin/rails decidim_simple_proposal:transfer_deleted_at_to_merged_at**
+   (Transfer merge data)
 
 If you already installed decidim 0.30's migrations:
 
-1. run bin/rails decidim_simple_proposal:skip_decidim_deleted_at_migration
+1. run **bin/rails decidim_simple_proposal:skip_decidim_deleted_at_migration**
    (Skip decidim migration for deleted_at)
-2. run bin/rails decidim_simple_proposal:install:migrations (Install merged_at)
-3. run bin/rails decidim_simple_proposal:transfer_deleted_at_to_merged_at
+2. run **bin/rails decidim_simple_proposal:install:migrations** (Install merged_at)
+3. run **bin/rails db:migrate**
+4. run **bin/rails decidim_simple_proposal:transfer_deleted_at_to_merged_at**
    (Transfer merge data)
-4. run bin/rails db:migrate
 
 This can be done even after if you get an error for trying to run the decidim migrations
 without running the rake tasks.
