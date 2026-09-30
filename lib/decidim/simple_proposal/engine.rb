@@ -10,7 +10,7 @@ module Decidim
         # itself as the first priority when loading view paths which would break
         # the functionality in this module overriding some of the same views in
         # proposals.
-        initializer "decidim_privacy.prepend_view_path", after: "decidim_privacy.prepend_view_path" do
+        initializer "decidim_simple_proposal.prepend_view_path", after: "decidim_privacy.prepend_view_path" do
           config.after_initialize do
             # Append the engine view path **BEFORE** the privacy module's view
             # path in order to take priority over that module.
