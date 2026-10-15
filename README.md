@@ -96,17 +96,6 @@ $ bundle exec rake decidim_simple_proposal:install:migrationsz
 $ bundle exec rails db:migrate
 ```
 
-## Configuration
-
-
-```ruby
-# config/initializers/simple_proposal.rb
-
-Decidim::SimpleProposal.configure do |config|
-  config.require_scope = true # Default
-end
-```
-
 ## Contributing
 
 See [Decidim](https://github.com/decidim/decidim).
