@@ -26,8 +26,7 @@ namespace :decidim_simple_proposal do
         content = File.read(file)
 
         # Already neutralized? (empty class body)
-        if content.match?(/class\s+#{class_name}\s*<.*Migration.*\n\s*end/m) &&
-           content.exclude?("def up")
+        if content.include?("Neutralized by decidim-simple_proposal.")
           puts "  [OK]   #{class_name} — already a no-op"
           next
         end
