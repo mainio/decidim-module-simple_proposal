@@ -7,6 +7,8 @@ module Decidim
         extend ActiveSupport::Concern
 
         included do
+          private
+
           def collection
             @collection ||= ::Decidim::Proposals::Proposal.where(component: current_component, merged_at: nil).not_hidden.published
           end
